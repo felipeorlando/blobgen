@@ -1,0 +1,183 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-geist-sans);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* blobgen.ai — true-black / YouTube-red dark theme (single, dark-only theme) */
+:root,
+.dark {
+  --radius: 0.9rem;
+
+  --background: oklch(0.045 0 0);
+  --foreground: oklch(0.985 0 0);
+
+  --card: oklch(0.108 0.003 17);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.12 0.004 17);
+  --popover-foreground: oklch(0.985 0 0);
+
+  --primary: oklch(0.617 0.243 26);
+  --primary-foreground: oklch(0.995 0 0);
+
+  --secondary: oklch(0.17 0.004 17);
+  --secondary-foreground: oklch(0.985 0 0);
+
+  --muted: oklch(0.165 0.004 17);
+  --muted-foreground: oklch(0.648 0.006 20);
+
+  --accent: oklch(0.2 0.012 22);
+  --accent-foreground: oklch(0.985 0 0);
+
+  --destructive: oklch(0.617 0.243 26);
+
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.617 0.2 26 / 55%);
+
+  --brand: oklch(0.617 0.243 26);
+  --brand-foreground: oklch(0.995 0 0);
+
+  --chart-1: oklch(0.617 0.243 26);
+  --chart-2: oklch(0.7 0.21 25);
+  --chart-3: oklch(0.5 0.2 27);
+  --chart-4: oklch(0.78 0.18 24);
+  --chart-5: oklch(0.4 0.16 28);
+
+  --sidebar: oklch(0.108 0.003 17);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.617 0.243 26);
+  --sidebar-primary-foreground: oklch(0.995 0 0);
+  --sidebar-accent: oklch(0.2 0.012 22);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-ring: oklch(0.617 0.2 26 / 55%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/* ----- Brand utilities ----- */
+
+/* Light (white → grey) gradient headline text */
+.text-grad-light {
+  background-image: linear-gradient(
+    180deg,
+    oklch(1 0 0) 0%,
+    oklch(0.78 0 0) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Red gradient headline text */
+.text-grad-red {
+  background-image: linear-gradient(
+    180deg,
+    oklch(0.7 0.235 26) 0%,
+    oklch(0.56 0.245 27) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Soft red glow used on primary CTAs */
+.glow-red {
+  box-shadow:
+    0 10px 34px -10px oklch(0.617 0.243 26 / 0.65),
+    0 0 0 1px oklch(0.617 0.243 26 / 0.25) inset;
+}
+
+/* Subtle card sheen */
+.card-surface {
+  background:
+    linear-gradient(
+      180deg,
+      oklch(1 0 0 / 0.035) 0%,
+      oklch(1 0 0 / 0) 40%
+    ),
+    var(--card);
+}
+
+/* Ambient red radial glow for section backdrops */
+.glow-radial {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    55% 45% at 50% 0%,
+    oklch(0.617 0.243 26 / 0.13),
+    transparent 70%
+  );
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
