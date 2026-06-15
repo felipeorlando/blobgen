@@ -50,10 +50,61 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* blobgen.ai — true-black / YouTube-red dark theme (single, dark-only theme) */
-:root,
-.dark {
+/* blobgen.ai — YouTube-red brand. Light is the default palette; `.dark`
+   overrides it with the true-black theme. Theme is chosen at runtime
+   (light / system / dark) via the toggle in the footer. */
+:root {
   --radius: 0.9rem;
+
+  color-scheme: light;
+
+  --background: oklch(0.99 0.002 60);
+  --foreground: oklch(0.205 0.012 25);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.205 0.012 25);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.205 0.012 25);
+
+  --primary: oklch(0.585 0.243 27);
+  --primary-foreground: oklch(0.995 0 0);
+
+  --secondary: oklch(0.965 0.004 50);
+  --secondary-foreground: oklch(0.245 0.012 25);
+
+  --muted: oklch(0.968 0.003 50);
+  --muted-foreground: oklch(0.505 0.014 25);
+
+  --accent: oklch(0.955 0.014 25);
+  --accent-foreground: oklch(0.245 0.012 25);
+
+  --destructive: oklch(0.585 0.243 27);
+
+  --border: oklch(0.205 0.02 25 / 10%);
+  --input: oklch(0.205 0.02 25 / 14%);
+  --ring: oklch(0.585 0.22 27 / 45%);
+
+  --brand: oklch(0.585 0.243 27);
+  --brand-foreground: oklch(0.995 0 0);
+
+  --chart-1: oklch(0.585 0.243 27);
+  --chart-2: oklch(0.66 0.21 25);
+  --chart-3: oklch(0.5 0.2 28);
+  --chart-4: oklch(0.72 0.17 24);
+  --chart-5: oklch(0.43 0.16 29);
+
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.205 0.012 25);
+  --sidebar-primary: oklch(0.585 0.243 27);
+  --sidebar-primary-foreground: oklch(0.995 0 0);
+  --sidebar-accent: oklch(0.955 0.014 25);
+  --sidebar-accent-foreground: oklch(0.245 0.012 25);
+  --sidebar-border: oklch(0.205 0.02 25 / 10%);
+  --sidebar-ring: oklch(0.585 0.22 27 / 45%);
+}
+
+.dark {
+  color-scheme: dark;
 
   --background: oklch(0.045 0 0);
   --foreground: oklch(0.985 0 0);
@@ -106,7 +157,6 @@
   }
   html {
     @apply font-sans;
-    color-scheme: dark;
     scroll-behavior: smooth;
     scroll-padding-top: 6rem;
     -webkit-font-smoothing: antialiased;
@@ -118,39 +168,64 @@
 
 /* ----- Brand utilities ----- */
 
-/* Light (white → grey) gradient headline text */
+/* Neutral gradient headline text (dark ink on light, white→grey on dark) */
 .text-grad-light {
+  background-image: linear-gradient(
+    180deg,
+    oklch(0.28 0.012 25) 0%,
+    oklch(0.46 0.014 25) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark .text-grad-light {
   background-image: linear-gradient(
     180deg,
     oklch(1 0 0) 0%,
     oklch(0.78 0 0) 100%
   );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 /* Red gradient headline text */
 .text-grad-red {
   background-image: linear-gradient(
     180deg,
-    oklch(0.7 0.235 26) 0%,
-    oklch(0.56 0.245 27) 100%
+    oklch(0.62 0.245 27) 0%,
+    oklch(0.5 0.243 28) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
+.dark .text-grad-red {
+  background-image: linear-gradient(
+    180deg,
+    oklch(0.7 0.235 26) 0%,
+    oklch(0.56 0.245 27) 100%
+  );
+}
 
 /* Soft red glow used on primary CTAs */
 .glow-red {
+  box-shadow:
+    0 10px 34px -10px oklch(0.617 0.243 26 / 0.5),
+    0 0 0 1px oklch(0.617 0.243 26 / 0.25) inset;
+}
+.dark .glow-red {
   box-shadow:
     0 10px 34px -10px oklch(0.617 0.243 26 / 0.65),
     0 0 0 1px oklch(0.617 0.243 26 / 0.25) inset;
 }
 
-/* Subtle card sheen */
+/* Card surface: soft elevation on light, subtle top sheen on dark */
 .card-surface {
+  background: var(--card);
+  box-shadow:
+    0 1px 2px oklch(0.2 0.02 25 / 0.05),
+    0 8px 24px -16px oklch(0.2 0.02 25 / 0.12);
+}
+.dark .card-surface {
   background:
     linear-gradient(
       180deg,
@@ -158,6 +233,7 @@
       oklch(1 0 0 / 0) 40%
     ),
     var(--card);
+  box-shadow: none;
 }
 
 /* Ambient red radial glow for section backdrops */
@@ -165,6 +241,13 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+  background: radial-gradient(
+    55% 45% at 50% 0%,
+    oklch(0.617 0.243 26 / 0.07),
+    transparent 70%
+  );
+}
+.dark .glow-radial {
   background: radial-gradient(
     55% 45% at 50% 0%,
     oklch(0.617 0.243 26 / 0.13),

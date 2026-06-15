@@ -109,7 +109,7 @@ function MiniPanel({ className, children }: { className?: string; children: Reac
   return (
     <div
       className={cn(
-        "rounded-xl border border-border bg-background/50 p-3.5",
+        "rounded-xl border border-border bg-muted/50 p-3.5 dark:bg-background/50",
         className,
       )}
     >
@@ -120,7 +120,7 @@ function MiniPanel({ className, children }: { className?: string; children: Reac
 
 function Pill({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-md border border-border bg-background/60 px-2 py-1 text-xs font-medium text-muted-foreground">
+    <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted/60 px-2 py-1 text-xs font-medium text-muted-foreground dark:bg-background/60">
       {children}
     </span>
   );
@@ -142,16 +142,20 @@ function AutoPublishCard() {
         <p className="text-xs text-muted-foreground">Best time to post</p>
         <p className="mt-0.5 text-2xl font-bold text-foreground">6:30 PM</p>
         <p className="text-xs text-muted-foreground">Today</p>
-        <div className="mt-3 flex h-16 items-end gap-1.5">
+        <div className="mt-3 flex items-end gap-1.5">
           {BARS.map((h, i) => (
             <div key={i} className="flex flex-1 flex-col items-center gap-1.5">
-              <div
-                className={cn(
-                  "w-full rounded-sm",
-                  i === 5 ? "bg-primary" : "bg-muted-foreground/25",
-                )}
-                style={{ height: `${h}%` }}
-              />
+              <div className="flex h-16 w-full items-end">
+                <div
+                  className={cn(
+                    "w-full rounded-sm",
+                    i === 5
+                      ? "bg-primary"
+                      : "bg-foreground/15 dark:bg-muted-foreground/25",
+                  )}
+                  style={{ height: `${h}%` }}
+                />
+              </div>
               <span className="text-[10px] text-muted-foreground">
                 {BAR_LABELS[i]}
               </span>
@@ -228,7 +232,7 @@ function PublishingCalendar() {
           Publishing calendar
         </h3>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 rounded-lg border border-border bg-background/60 px-1 py-1">
+          <div className="flex items-center gap-1 rounded-lg border border-border bg-muted/60 px-1 py-1 dark:bg-background/60">
             <ChevronLeft className="size-4 text-muted-foreground" />
             <span className="px-1 text-xs font-medium text-foreground">
               May 12 – May 18, 2025
@@ -306,7 +310,7 @@ function PublishingCalendar() {
 
 function EventCard({ ev }: { ev: CalEvent }) {
   return (
-    <div className="rounded-lg border border-border bg-background/70 p-1.5">
+    <div className="rounded-lg border border-border bg-muted/70 p-1.5 dark:bg-background/70">
       <div className="relative h-9 w-full overflow-hidden rounded-md">
         <Image src={ev.img} alt="" fill sizes="90px" className="object-cover" />
         <PlayBadge className="absolute bottom-1 left-1 h-3 w-[17px]" />
@@ -352,7 +356,7 @@ function UpcomingQueue() {
         {QUEUE.map((q) => (
           <div
             key={q.title}
-            className="rounded-xl border border-border bg-background/50 p-2.5"
+            className="rounded-xl border border-border bg-muted/50 p-2.5 dark:bg-background/50"
           >
             <div className="flex items-start gap-2.5">
               <span className="relative size-11 shrink-0 overflow-hidden rounded-lg">
@@ -455,7 +459,7 @@ function PerformanceCard() {
                   <span className="text-base font-bold text-foreground">
                     {s.value}
                   </span>
-                  <span className="text-[11px] font-medium text-emerald-400">
+                  <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
                     ↑ {s.delta}
                   </span>
                 </div>

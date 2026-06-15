@@ -87,7 +87,7 @@ function Tile({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-white/10 bg-card",
+        "group relative overflow-hidden rounded-2xl border border-border bg-card",
         ratio,
       )}
     >
@@ -99,7 +99,7 @@ function Tile({
         priority={priority}
         className="object-cover transition-transform duration-500 group-hover:scale-105"
       />
-      <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/5" />
+      <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-foreground/5" />
     </div>
   );
 }

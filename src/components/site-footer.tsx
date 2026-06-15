@@ -6,6 +6,7 @@ import {
   XIcon,
   YouTubeIcon,
 } from "@/components/icons";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -123,11 +124,16 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 text-sm text-muted-foreground sm:flex-row">
-          <p>© 2025 blobgen.ai. All rights reserved.</p>
-          <p className="inline-flex items-center gap-1.5">
-            Made with <span className="text-primary">♥</span> for creators
+        <div className="mt-12 flex flex-col items-center gap-5 border-t border-border pt-6 text-sm text-muted-foreground sm:flex-row sm:justify-between">
+          <p className="order-last sm:order-first">
+            © 2025 blobgen.ai. All rights reserved.
           </p>
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+            <p className="inline-flex items-center gap-1.5">
+              Made with <span className="text-primary">♥</span> for creators
+            </p>
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </footer>
