@@ -1,5 +1,6 @@
 import { SiteHeader } from "@/components/site-header";
 import { Hero } from "@/components/hero";
+import { Pipeline } from "@/components/pipeline";
 import { UseCases } from "@/components/use-cases";
 import { ControlCenter } from "@/components/control-center";
 import { Pricing } from "@/components/pricing";
@@ -11,6 +12,7 @@ export default function Home() {
       <SiteHeader />
       <main>
         <Hero />
+        <Pipeline />
         <UseCases />
         <ControlCenter />
         <Pricing />
