@@ -3,18 +3,42 @@ import { Upload } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const TOP_TILES = [
-  { src: "/images/mountains.jpg", alt: "Mountain range above the clouds at sunset" },
-  { src: "/images/motivation.jpg", alt: "Person on a ridge watching layered mountains at sunrise" },
-  { src: "/images/space.jpg", alt: "Planet Earth seen from space" },
-  { src: "/images/lion.jpg", alt: "Portrait of a lion" },
+type TileData = {
+  src: string;
+  alt: string;
+  portrait?: boolean;
+  priority?: boolean;
+};
+
+// Justified bento: every tile is strictly 16:9 (landscape) or 9:16 (portrait).
+// On desktop each row is a flex line where flex-grow is proportional to the
+// aspect ratio, so tiles share one row height while keeping exact ratios.
+// On smaller screens it collapses to a uniform 16:9 two-up grid.
+const ROW_ONE: TileData[] = [
+  { src: "/images/space.jpg", alt: "Planet Earth seen from space", portrait: true, priority: true },
+  { src: "/images/motivation.jpg", alt: "Person on a ridge watching layered mountains at sunrise", priority: true },
+  { src: "/images/city.jpg", alt: "City skyline at golden hour", priority: true },
+  { src: "/images/lion.jpg", alt: "Portrait of a lion", portrait: true, priority: true },
 ];
 
-const BOTTOM_TILES = [
+const ROW_TWO: TileData[] = [
   { src: "/images/desk.jpg", alt: "Laptop and coffee on a wooden desk" },
-  { src: "/images/blueberries.jpg", alt: "Bowl of fresh blueberries" },
-  { src: "/images/city.jpg", alt: "City skyline at golden hour" },
+  // UploadTile sits here (portrait), between the two landscapes.
+  { src: "/images/mountains.jpg", alt: "Mountain range above the clouds at sunset" },
 ];
+
+// Tiles are strictly 16:9 / 9:16. Desktop column widths are set proportional
+// to the aspect ratios (below), which makes every tile in a row share one
+// height while keeping exact framing.
+const LANDSCAPE = "aspect-video";
+const PORTRAIT = "aspect-video lg:aspect-[9/16]";
+
+// Column tracks ∝ aspect ratio (16:9 = 1.7778, 9:16 = 0.5625), min 0 so the
+// fr ratio — not content — decides the width.
+const ROW_ONE_COLS =
+  "lg:grid-cols-[minmax(0,0.5625fr)_minmax(0,1.7778fr)_minmax(0,1.7778fr)_minmax(0,0.5625fr)]";
+const ROW_TWO_COLS =
+  "lg:grid-cols-[minmax(0,1.7778fr)_minmax(0,0.5625fr)_minmax(0,1.7778fr)]";
 
 export function Hero() {
   return (
@@ -54,18 +78,17 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Image showcase grid */}
-        <div className="mx-auto mt-14 max-w-6xl">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            {TOP_TILES.map((tile) => (
-              <Tile key={tile.src} {...tile} ratio="aspect-[4/5]" priority />
+        {/* Justified bento image showcase */}
+        <div className="mx-auto mt-14 max-w-6xl space-y-3 sm:space-y-4">
+          <div className={cn("grid grid-cols-2 gap-3 sm:gap-4", ROW_ONE_COLS)}>
+            {ROW_ONE.map((tile) => (
+              <Tile key={tile.src} {...tile} />
             ))}
           </div>
-          <div className="mt-3 grid grid-cols-2 gap-3 sm:mt-4 sm:grid-cols-4 sm:gap-4">
-            {BOTTOM_TILES.map((tile) => (
-              <Tile key={tile.src} {...tile} ratio="aspect-[16/11]" />
-            ))}
-            <UploadTile />
+          <div className={cn("grid grid-cols-2 gap-3 sm:gap-4", ROW_TWO_COLS)}>
+            <Tile {...ROW_TWO[0]} />
+            <UploadTile className="col-span-2 order-last lg:order-none lg:col-span-1" />
+            <Tile {...ROW_TWO[1]} />
           </div>
         </div>
       </div>
@@ -76,26 +99,23 @@ export function Hero() {
 function Tile({
   src,
   alt,
-  ratio,
+  portrait,
   priority,
-}: {
-  src: string;
-  alt: string;
-  ratio: string;
-  priority?: boolean;
-}) {
+  className,
+}: TileData & { className?: string }) {
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-border bg-card",
-        ratio,
+        "group relative min-w-0 overflow-hidden rounded-2xl border border-border bg-card",
+        portrait ? PORTRAIT : LANDSCAPE,
+        className,
       )}
     >
       <Image
         src={src}
         alt={alt}
         fill
-        sizes="(min-width: 640px) 25vw, 50vw"
+        sizes="(min-width: 1024px) 30vw, 50vw"
         priority={priority}
         className="object-cover transition-transform duration-500 group-hover:scale-105"
       />
@@ -104,9 +124,15 @@ function Tile({
   );
 }
 
-function UploadTile() {
+function UploadTile({ className }: { className?: string }) {
   return (
-    <div className="relative flex aspect-[16/11] flex-col items-center justify-center rounded-2xl border border-dashed border-primary/30 bg-card px-4 text-center card-surface">
+    <div
+      className={cn(
+        "relative flex min-w-0 flex-col items-center justify-center rounded-2xl border border-dashed border-primary/30 bg-card px-3 text-center card-surface",
+        PORTRAIT,
+        className,
+      )}
+    >
       <div className="flex size-11 items-center justify-center rounded-full border border-primary/40 text-primary">
         <Upload className="size-5" />
       </div>

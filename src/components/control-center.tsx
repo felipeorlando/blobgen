@@ -85,14 +85,16 @@ function FeatureCard({
   title,
   desc,
   children,
+  className,
 }: {
   icon: LucideIcon;
   title: string;
   desc: string;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <Panel className="p-5">
+    <Panel className={cn("flex flex-col p-5", className)}>
       <div className="flex items-center gap-2.5">
         <span className="text-primary">
           <Icon className="size-5" />
@@ -100,7 +102,7 @@ function FeatureCard({
         <h3 className="text-base font-semibold text-foreground">{title}</h3>
       </div>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{desc}</p>
-      <div className="mt-4">{children}</div>
+      <div className="mt-4 flex flex-1 flex-col">{children}</div>
     </Panel>
   );
 }
@@ -181,8 +183,9 @@ function BatchCard() {
       icon={Layers}
       title="Batch generation"
       desc="Create weeks of Shorts in minutes and queue them with one click."
+      className="lg:flex-1"
     >
-      <MiniPanel className="space-y-2.5">
+      <MiniPanel className="flex h-full flex-col justify-between gap-2.5">
         {BATCH_ITEMS.map((item) => (
           <div key={item.label} className="flex items-center gap-3">
             <span className="relative size-7 shrink-0 overflow-hidden rounded-md">
@@ -448,8 +451,9 @@ function PerformanceCard() {
       icon={ChartColumnIncreasing}
       title="Performance snapshots"
       desc="Track what's working and double down on what drives growth."
+      className="lg:flex-1"
     >
-      <MiniPanel>
+      <MiniPanel className="flex h-full flex-col justify-center">
         <div className="flex gap-4">
           <div className="flex-1 space-y-3">
             {STATS.map((s) => (
