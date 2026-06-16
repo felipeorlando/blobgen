@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { Gem } from "lucide-react";
 import { StudioTopbar } from "./studio-topbar";
 import { PromptComposer } from "./prompt-composer";
 import { ProjectsGrid } from "./projects-grid";
+import { Reveal } from "./reveal";
 import { useStudio } from "./studio-context";
 
 export function NewIdeaView() {
@@ -23,35 +23,27 @@ export function NewIdeaView() {
         {/* Hero + composer */}
         <div className="mx-auto w-full max-w-2xl">
           <div className="flex flex-col items-center text-center">
-            <span className="inline-flex items-center gap-2 rounded-md border border-border bg-card py-1 pl-1 pr-2.5 text-xs font-medium text-muted-foreground">
-              <Image
-                src={channel.image}
-                alt=""
-                width={24}
-                height={24}
-                className="size-5 rounded-[4px] object-cover"
-              />
-              Creating for {channel.name}
-            </span>
-
-            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-foreground sm:text-[2.5rem] sm:leading-[1.1]">
+            <h2 className="animate-in fade-in-0 slide-in-from-bottom-2 fill-mode-both duration-500 text-3xl font-semibold tracking-tight text-foreground motion-reduce:animate-none sm:text-[2.5rem] sm:leading-[1.1]">
               What&rsquo;s the next idea?
             </h2>
-            <p className="mt-3 max-w-md text-pretty text-[0.95rem] leading-relaxed text-muted-foreground">
+            <p
+              style={{ animationDelay: "90ms" }}
+              className="mt-3 max-w-md text-pretty text-[0.95rem] leading-relaxed text-muted-foreground animate-in fade-in-0 slide-in-from-bottom-2 fill-mode-both duration-500 motion-reduce:animate-none"
+            >
               One idea becomes a long-form video, Shorts, and the cuts in
               between.
             </p>
           </div>
 
-          <div className="mt-8">
+          <Reveal delay={180} className="mt-8">
             <PromptComposer />
-          </div>
+          </Reveal>
         </div>
 
         {/* Existing projects — pushed toward the bottom of the fold */}
-        <div className="mt-auto pt-20">
+        <Reveal delay={280} className="mt-auto pt-20">
           <ProjectsGrid />
-        </div>
+        </Reveal>
       </div>
     </>
   );

@@ -822,3 +822,205 @@ export function getAudience(channelId: string): AudienceData {
     subscriberTrend,
   };
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Schedule (planner)                                                        */
+/* -------------------------------------------------------------------------- */
+/* A static two-week window so SSR and client agree (no Date.now at load).
+   "Today" is anchored at Tue Jun 16, 2026 — index 1 of the first week. */
+
+const WEEKDAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+export const SCHEDULE_TODAY_INDEX = 1;
+
+export type ScheduleWeek = { label: string; range: string };
+
+export const SCHEDULE_WEEKS: ScheduleWeek[] = [
+  { label: "This week", range: "Jun 15 – 21" },
+  { label: "Next week", range: "Jun 22 – 28" },
+];
+
+export type ScheduleDay = {
+  index: number;
+  week: 0 | 1;
+  weekday: string;
+  dayNum: number;
+  isWeekend: boolean;
+  isToday: boolean;
+  isPast: boolean;
+};
+
+export const SCHEDULE_DAYS: ScheduleDay[] = Array.from({ length: 14 }, (_, index) => {
+  const dow = index % 7;
+  return {
+    index,
+    week: (index < 7 ? 0 : 1) as 0 | 1,
+    weekday: WEEKDAY_NAMES[dow],
+    dayNum: 15 + index, // Jun 15 .. Jun 28
+    isWeekend: dow >= 5,
+    isToday: index === SCHEDULE_TODAY_INDEX,
+    isPast: index < SCHEDULE_TODAY_INDEX,
+  };
+});
+
+/** Human-relative day label, anchored at today. */
+export function relativeDay(dayIndex: number): string {
+  const diff = dayIndex - SCHEDULE_TODAY_INDEX;
+  if (diff <= 0) return "Today";
+  if (diff === 1) return "Tomorrow";
+  return `In ${diff} days`;
+}
+
+const SCHEDULE_SLOTS = [
+  { minutes: 420, label: "7:00 AM", short: "7a" },
+  { minutes: 540, label: "9:00 AM", short: "9a" },
+  { minutes: 720, label: "12:00 PM", short: "12p" },
+  { minutes: 900, label: "3:00 PM", short: "3p" },
+  { minutes: 1080, label: "6:00 PM", short: "6p" },
+  { minutes: 1200, label: "8:00 PM", short: "8p" },
+];
+
+export type UploadStatus = "Scheduled" | "Rendering" | "Draft";
+
+export type ScheduledUpload = {
+  id: string;
+  channelId: string;
+  title: string;
+  thumb: string;
+  visual: boolean;
+  kind: AssetKind;
+  status: UploadStatus;
+  dayIndex: number;
+  minutes: number;
+  timeLabel: string;
+  autopilot: boolean;
+};
+
+const SCHED_KINDS: AssetKind[] = [
+  "Long-form",
+  "Short",
+  "Short",
+  "Cuts",
+  "Long-form",
+  "Short",
+  "Thumbnail",
+  "Short",
+  "Cuts",
+  "Script",
+  "Long-form",
+  "Short",
+];
+
+/** Deterministically pick `k` distinct slot indices, returned in time order. */
+function pickSlots(rnd: () => number, k: number): number[] {
+  const idx = SCHEDULE_SLOTS.map((_, i) => i);
+  for (let i = idx.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    [idx[i], idx[j]] = [idx[j], idx[i]];
+  }
+  return idx.slice(0, k).sort((a, b) => a - b);
+}
+
+function buildSchedule(channel: Channel): ScheduledUpload[] {
+  const rnd = seeded(hashSeed(`${channel.id}-schedule`));
+  const out: ScheduledUpload[] = [];
+  let i = 0;
+
+  for (let d = SCHEDULE_TODAY_INDEX; d < 14; d++) {
+    const weekend = d % 7 >= 5;
+    const weekFade = d < 7 ? 1 : 0.7; // next week is a little sparser
+    const chance = (weekend ? 0.3 : 0.74) * weekFade;
+    if (rnd() > chance) continue;
+
+    const perDay = 1 + (rnd() > 0.78 ? 1 : 0);
+    for (const si of pickSlots(rnd, perDay)) {
+      const slot = SCHEDULE_SLOTS[si];
+      const kind = SCHED_KINDS[i % SCHED_KINDS.length];
+      const soon = d <= SCHEDULE_TODAY_INDEX + 1;
+      const status: UploadStatus = soon
+        ? rnd() > 0.45
+          ? "Rendering"
+          : "Scheduled"
+        : rnd() > 0.85
+          ? "Draft"
+          : "Scheduled";
+
+      out.push({
+        id: `${channel.id}-sch${i}`,
+        channelId: channel.id,
+        title: channel.videoTitles[i % channel.videoTitles.length],
+        thumb: channel.thumbs[i % channel.thumbs.length],
+        visual: kind !== "Script",
+        kind,
+        status,
+        dayIndex: d,
+        minutes: slot.minutes,
+        timeLabel: slot.label,
+        autopilot: rnd() > 0.56,
+      });
+      i++;
+    }
+  }
+
+  return out.sort((a, b) => a.dayIndex - b.dayIndex || a.minutes - b.minutes);
+}
+
+const SCHEDULE_BY_CHANNEL: Record<string, ScheduledUpload[]> = Object.fromEntries(
+  CHANNELS.map((c) => [c.id, buildSchedule(c)]),
+);
+
+export function getSchedule(channelId: string): ScheduledUpload[] {
+  return SCHEDULE_BY_CHANNEL[channelId] ?? [];
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Best time to publish                                                      */
+/* -------------------------------------------------------------------------- */
+
+export type BestTime = {
+  grid: number[][]; // [7 weekdays][6 slots] intensity 0..4
+  weekdays: string[];
+  slots: string[];
+  bestDay: number;
+  bestSlot: number;
+  bestLabel: string;
+};
+
+export function getBestTimes(channelId: string): BestTime {
+  const rnd = seeded(hashSeed(`${channelId}-besttime`));
+  const grid = WEEKDAY_NAMES.map((_, day) =>
+    SCHEDULE_SLOTS.map((s) => {
+      const evening = s.minutes >= 1020 ? 1.7 : s.minutes >= 660 ? 1.15 : 0.6;
+      const weekend = day >= 5 ? 1.2 : 1;
+      const r = rnd() * evening * weekend;
+      if (r < 0.45) return 0;
+      if (r < 0.85) return 1;
+      if (r < 1.2) return 2;
+      if (r < 1.6) return 3;
+      return 4;
+    }),
+  );
+
+  let bestDay = 0;
+  let bestSlot = 0;
+  let best = -1;
+  grid.forEach((row, day) =>
+    row.forEach((v, slot) => {
+      const score = v * 10 + slot; // tie-break toward later slots
+      if (score > best) {
+        best = score;
+        bestDay = day;
+        bestSlot = slot;
+      }
+    }),
+  );
+
+  return {
+    grid,
+    weekdays: WEEKDAY_NAMES,
+    slots: SCHEDULE_SLOTS.map((s) => s.short),
+    bestDay,
+    bestSlot,
+    bestLabel: `${WEEKDAY_NAMES[bestDay]} · ${SCHEDULE_SLOTS[bestSlot].label}`,
+  };
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Calendar, ChevronDown } from "lucide-react";
 import { YouTubeIcon } from "@/components/icons";
@@ -18,14 +18,20 @@ import { AnalyticsScope } from "./analytics-scope";
 import { AiInsights } from "./ai-insights";
 import { FormatSplit } from "./format-split";
 import { UploadHeatmap } from "./upload-heatmap";
+import { Reveal } from "./reveal";
 import { useStudio } from "./studio-context";
 
 export function AnalyticsView() {
   const { channel, channelId } = useStudio();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // A new channel starts on its aggregate view.
-  useEffect(() => setSelectedId(null), [channelId]);
+  // A new channel starts on its aggregate view. Reset during render (with a
+  // previous-value guard) instead of an effect — no extra render pass.
+  const [prevChannel, setPrevChannel] = useState(channelId);
+  if (prevChannel !== channelId) {
+    setPrevChannel(channelId);
+    setSelectedId(null);
+  }
 
   const videos = getVideos(channelId);
   const analytics = getAnalytics(channelId);
@@ -55,7 +61,7 @@ export function AnalyticsView() {
 
       <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8">
         {/* Channel identity + scope selector */}
-        <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-7 flex flex-col gap-4 animate-in fade-in-0 slide-in-from-bottom-2 fill-mode-both duration-500 motion-reduce:animate-none sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3.5">
             <Image
               src={channel.image}
@@ -100,7 +106,7 @@ export function AnalyticsView() {
 
         {/* Retention + insights */}
         <div className="mt-5 grid items-start gap-4 lg:grid-cols-3">
-          <div className="lg:col-span-2">
+          <Reveal delay={200} className="lg:col-span-2">
             <RetentionChart
               curve={selected ? selected.curve : analytics.curve}
               average={selected ? selected.retention : analytics.retention}
@@ -110,19 +116,23 @@ export function AnalyticsView() {
                   : `Channel average across ${videos.length} uploads`
               }
             />
-          </div>
-          <AiInsights analytics={analytics} />
+          </Reveal>
+          <Reveal delay={260}>
+            <AiInsights analytics={analytics} />
+          </Reveal>
         </div>
 
         {/* Format mix + cadence */}
         <div className="mt-4 grid items-start gap-4 lg:grid-cols-3">
-          <FormatSplit
-            shorts={analytics.formatSplit.shorts}
-            long={analytics.formatSplit.long}
-          />
-          <div className="lg:col-span-2">
+          <Reveal delay={320}>
+            <FormatSplit
+              shorts={analytics.formatSplit.shorts}
+              long={analytics.formatSplit.long}
+            />
+          </Reveal>
+          <Reveal delay={380} className="lg:col-span-2">
             <UploadHeatmap data={analytics.heatmap} />
-          </div>
+          </Reveal>
         </div>
       </div>
     </>

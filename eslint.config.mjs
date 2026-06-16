@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored animate-ui icon components (kept aligned with upstream).
+    "src/components/animate-ui/**",
   ]),
 ]);
 

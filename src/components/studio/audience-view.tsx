@@ -15,19 +15,25 @@ import { compact, getAudience, signed } from "@/lib/studio";
 import { StudioTopbar } from "./studio-topbar";
 import { BarList } from "./bar-list";
 import { AreaTrend } from "./area-trend";
+import { Reveal } from "./reveal";
 import { useStudio } from "./studio-context";
 
 function Stat({
   label,
   value,
   sub,
+  index = 0,
 }: {
   label: string;
   value: string;
   sub?: React.ReactNode;
+  index?: number;
 }) {
   return (
-    <div className="card-surface rounded-lg border border-border p-4">
+    <div
+      style={{ animationDelay: `${index * 60}ms` }}
+      className="card-surface animate-in fade-in-0 slide-in-from-bottom-2 fill-mode-both duration-500 rounded-lg border border-border p-4 motion-reduce:animate-none"
+    >
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
       <p className="mt-2 text-[1.7rem] font-bold leading-none tracking-tight tabular-nums">
         {value}
@@ -185,7 +191,7 @@ export function AudienceView() {
 
       <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8">
         {/* Identity */}
-        <div className="mb-7 flex items-center gap-3.5">
+        <div className="mb-7 flex items-center gap-3.5 animate-in fade-in-0 slide-in-from-bottom-2 fill-mode-both duration-500 motion-reduce:animate-none">
           <Image
             src={channel.image}
             alt=""
@@ -206,6 +212,7 @@ export function AudienceView() {
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <Stat
+            index={0}
             label="Subscribers"
             value={compact(a.subscribers)}
             sub={
@@ -215,16 +222,19 @@ export function AudienceView() {
             }
           />
           <Stat
+            index={1}
             label="Unique viewers"
             value={compact(a.uniqueViewers)}
             sub="Last 28 days"
           />
           <Stat
+            index={2}
             label="Avg. view duration"
             value={a.avgViewLabel}
             sub="Per view"
           />
           <Stat
+            index={3}
             label="Returning rate"
             value={`${a.returningRate}%`}
             sub="Viewers who came back"
@@ -233,35 +243,43 @@ export function AudienceView() {
 
         {/* Growth + split */}
         <div className="mt-5 grid items-start gap-4 lg:grid-cols-3">
-          <div className="lg:col-span-2">
+          <Reveal delay={280} className="lg:col-span-2">
             <AreaTrend data={a.subscriberTrend} gained={a.subsGained} />
-          </div>
-          <RatioDonut returning={a.returningRate} />
+          </Reveal>
+          <Reveal delay={340}>
+            <RatioDonut returning={a.returningRate} />
+          </Reveal>
         </div>
 
         {/* Demographics */}
         <div className="mt-4 grid gap-4 lg:grid-cols-3">
-          <BarList
-            title="Age"
-            icon={Users}
-            rows={a.age.map((x) => ({ label: x.label, value: x.pct }))}
-          />
-          <BarList
-            title="Top countries"
-            icon={Globe}
-            rows={a.countries.map((x) => ({ label: x.country, value: x.pct }))}
-          />
-          <BarList
-            title="Devices"
-            icon={MonitorSmartphone}
-            rows={a.devices.map((x) => ({ label: x.label, value: x.pct }))}
-          />
+          <Reveal delay={360}>
+            <BarList
+              title="Age"
+              icon={Users}
+              rows={a.age.map((x) => ({ label: x.label, value: x.pct }))}
+            />
+          </Reveal>
+          <Reveal delay={420}>
+            <BarList
+              title="Top countries"
+              icon={Globe}
+              rows={a.countries.map((x) => ({ label: x.country, value: x.pct }))}
+            />
+          </Reveal>
+          <Reveal delay={480}>
+            <BarList
+              title="Devices"
+              icon={MonitorSmartphone}
+              rows={a.devices.map((x) => ({ label: x.label, value: x.pct }))}
+            />
+          </Reveal>
         </div>
 
         {/* Online times */}
-        <div className="mt-4">
+        <Reveal delay={480} className="mt-4">
           <OnlineTimes data={a.online} />
-        </div>
+        </Reveal>
       </div>
     </>
   );

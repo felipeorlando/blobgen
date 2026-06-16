@@ -48,6 +48,20 @@ function ShellInner({ children }: { children: React.ReactNode }) {
     };
   }, [mobileOpen]);
 
+  // Disable the native elastic/rubber-band overscroll inside the studio app
+  // shell (restored on leave, so marketing pages keep their native scroll feel).
+  useEffect(() => {
+    const root = document.documentElement;
+    const prevRoot = root.style.overscrollBehavior;
+    const prevBody = document.body.style.overscrollBehavior;
+    root.style.overscrollBehavior = "none";
+    document.body.style.overscrollBehavior = "none";
+    return () => {
+      root.style.overscrollBehavior = prevRoot;
+      document.body.style.overscrollBehavior = prevBody;
+    };
+  }, []);
+
   return (
     <div className="studio-scope min-h-[100dvh] bg-background">
       <AppSidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />

@@ -1,28 +1,25 @@
 "use client";
 
-import Image from "next/image";
+import type { ComponentType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  BarChart3,
-  CalendarClock,
-  Check,
-  Library,
-  Plus,
-  Settings2,
-  Sparkles,
-  Users,
-} from "lucide-react";
-import { Logo } from "@/components/icons";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AnimateIcon } from "@/components/animate-ui/icons/icon";
+import { Sparkles } from "@/components/animate-ui/icons/sparkles";
+import { Layers } from "@/components/animate-ui/icons/layers";
+import { Clock } from "@/components/animate-ui/icons/clock";
+import { ChartColumn } from "@/components/animate-ui/icons/chart-column";
+import { Users } from "@/components/animate-ui/icons/users";
 import { cn } from "@/lib/utils";
-import { compact } from "@/lib/studio";
-import { useStudio } from "./studio-context";
+import { ChannelSwitcher } from "./channel-switcher";
+import { UserMenu } from "./user-menu";
+
+/** animate-ui icons share this minimal surface (size + className). */
+type NavIcon = ComponentType<{ className?: string; size?: number }>;
 
 type NavItem = {
   label: string;
   href?: string;
-  icon: typeof Sparkles;
+  icon: NavIcon;
   match?: (path: string) => boolean;
 };
 
@@ -36,17 +33,22 @@ const CREATE: NavItem[] = [
   {
     label: "Library",
     href: "/studio/library",
-    icon: Library,
+    icon: Layers,
     match: (p) => p.startsWith("/studio/library"),
   },
-  { label: "Schedule", icon: CalendarClock },
+  {
+    label: "Schedule",
+    href: "/studio/schedule",
+    icon: Clock,
+    match: (p) => p.startsWith("/studio/schedule"),
+  },
 ];
 
 const INSIGHTS: NavItem[] = [
   {
     label: "Channel analytics",
     href: "/studio/analytics",
-    icon: BarChart3,
+    icon: ChartColumn,
     match: (p) => p.startsWith("/studio/analytics"),
   },
   {
@@ -69,8 +71,9 @@ function NavRow({
   const inner = (
     <>
       <item.icon
+        size={18}
         className={cn(
-          "size-[18px] shrink-0 transition-colors",
+          "shrink-0 transition-colors",
           active ? "text-primary" : "text-muted-foreground group-hover/nav:text-foreground",
         )}
       />
@@ -96,22 +99,24 @@ function NavRow({
   }
 
   return (
-    <Link
-      href={item.href}
-      onClick={onNavigate}
-      aria-current={active ? "page" : undefined}
-      className={cn(
-        base,
-        active
-          ? "bg-primary/10 text-foreground"
-          : "text-foreground/80 hover:bg-muted/60 hover:text-foreground",
-      )}
-    >
-      {active ? (
-        <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-primary" />
-      ) : null}
-      {inner}
-    </Link>
+    <AnimateIcon animateOnHover asChild>
+      <Link
+        href={item.href}
+        onClick={onNavigate}
+        aria-current={active ? "page" : undefined}
+        className={cn(
+          base,
+          active
+            ? "bg-primary/10 text-foreground"
+            : "text-foreground/80 hover:bg-muted/60 hover:text-foreground",
+        )}
+      >
+        {active ? (
+          <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-primary" />
+        ) : null}
+        {inner}
+      </Link>
+    </AnimateIcon>
   );
 }
 
@@ -131,7 +136,6 @@ export function AppSidebar({
   onClose?: () => void;
 }) {
   const pathname = usePathname();
-  const { channels, channelId, setChannelId } = useStudio();
 
   return (
     <aside
@@ -140,11 +144,13 @@ export function AppSidebar({
         mobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full",
       )}
     >
-      {/* Top: logo */}
-      <div className="flex h-16 items-center px-5">
-        <Link href="/studio" onClick={onClose} aria-label="blobgen.ai studio">
-          <Logo />
-        </Link>
+      {/* Top: channel switcher. Border lives on a height-less wrapper (not on
+          the h-16 box) so its divider lands pixel-exact on the page topbar,
+          which is structured the same way. */}
+      <div className="border-b border-sidebar-border">
+        <div className="flex h-16 items-center px-3">
+          <ChannelSwitcher />
+        </div>
       </div>
 
       {/* Menu */}
@@ -174,97 +180,10 @@ export function AppSidebar({
         </div>
       </nav>
 
-      {/* Bottom: channel switcher */}
-      <div className="border-t border-sidebar-border px-3 py-3">
-        <div className="flex items-center justify-between px-2 pb-1.5">
-          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-muted-foreground/70">
-            Channels
-          </p>
-          <span className="text-[0.68rem] font-medium text-muted-foreground/60">
-            {channels.length}
-          </span>
-        </div>
-
-        <div className="flex flex-col gap-0.5">
-          {channels.map((c) => {
-            const active = c.id === channelId;
-            return (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => setChannelId(c.id)}
-                aria-pressed={active}
-                className={cn(
-                  "group/ch flex items-center gap-3 rounded-md px-2 py-2 text-left transition-colors",
-                  active ? "bg-primary/10" : "hover:bg-muted/60",
-                )}
-              >
-                <span className="relative shrink-0">
-                  <Image
-                    src={c.image}
-                    alt=""
-                    width={40}
-                    height={40}
-                    className={cn(
-                      "size-9 rounded-lg object-cover ring-1 ring-inset ring-black/10 dark:ring-white/10",
-                      active && "ring-2 ring-primary/60",
-                    )}
-                  />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-1.5">
-                    <span
-                      className={cn(
-                        "truncate text-sm font-semibold",
-                        active ? "text-foreground" : "text-foreground/85",
-                      )}
-                    >
-                      {c.name}
-                    </span>
-                  </span>
-                  <span className="block truncate text-xs text-muted-foreground">
-                    {compact(c.subscribers)} subscribers
-                  </span>
-                </span>
-                {active ? (
-                  <Check className="size-4 shrink-0 text-primary" />
-                ) : null}
-              </button>
-            );
-          })}
-
-          <button
-            type="button"
-            className="flex items-center gap-3 rounded-md px-2 py-2 text-left text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
-          >
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-dashed border-border">
-              <Plus className="size-4" />
-            </span>
-            Add channel
-          </button>
-        </div>
-
-        {/* Account + theme */}
-        <div className="mt-3 border-t border-sidebar-border pt-3">
-          <div className="flex items-center gap-3 rounded-md px-2 py-1.5">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-sm font-bold text-primary">
-              PR
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold">Priya Raman</p>
-              <p className="truncate text-xs text-muted-foreground">Studio plan</p>
-            </div>
-            <button
-              type="button"
-              aria-label="Account settings"
-              className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <Settings2 className="size-4" />
-            </button>
-          </div>
-          <div className="mt-2 flex justify-center">
-            <ThemeToggle />
-          </div>
+      {/* Bottom: account menu — mirrors the top bar's structure exactly. */}
+      <div className="border-t border-sidebar-border">
+        <div className="flex h-16 items-center px-3">
+          <UserMenu />
         </div>
       </div>
     </aside>
