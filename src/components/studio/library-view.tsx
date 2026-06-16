@@ -104,15 +104,32 @@ function Media({ item }: { item: LibraryItem }) {
   const Icon = KIND_ICON[item.kind];
   if (item.visual) {
     return (
-      <div className="relative aspect-video overflow-hidden">
+      <div className="relative aspect-video overflow-hidden bg-muted">
         <Image
           src={item.thumb}
           alt=""
           fill
           sizes="(max-width: 768px) 100vw, 320px"
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+        {/* Play button overlay on hover */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <div className="flex size-16 items-center justify-center rounded-full bg-white/90 shadow-lg">
+            <svg className="ml-1 size-6 fill-black" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Duration badge (bottom-right) */}
+        <div className="absolute bottom-2.5 right-2.5">
+          <span className="inline-flex items-center rounded bg-black/75 px-2 py-1 text-xs font-medium text-white backdrop-blur">
+            {item.meta}
+          </span>
+        </div>
+
         <div className="absolute left-2.5 top-2.5">
           <KindBadge kind={item.kind} onTile />
         </div>
@@ -139,17 +156,19 @@ function LibraryCard({ item, index }: { item: LibraryItem; index: number }) {
   return (
     <article
       style={{ animationDelay: `${Math.min(index, 10) * 45}ms` }}
-      className="group animate-in fade-in-0 slide-in-from-bottom-2 fill-mode-both duration-500 overflow-hidden rounded-lg border border-border bg-card transition-[transform,border-color] ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-0.5 hover:border-foreground/15 motion-reduce:animate-none"
+      className="group animate-in fade-in-0 slide-in-from-bottom-2 fill-mode-both duration-500 cursor-pointer"
     >
-      <Media item={item} />
-      <div className="p-3.5">
-        <h3 className="line-clamp-1 text-sm font-semibold text-foreground">
+      <div className="overflow-hidden rounded-lg">
+        <Media item={item} />
+      </div>
+      <div className="pt-3">
+        <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground group-hover:text-foreground/85 transition-colors">
           {item.title}
         </h3>
-        <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-          <span className="font-mono tabular-nums">{item.meta}</span>
-          <span className="text-muted-foreground/40">·</span>
-          <span className="truncate">{item.editedLabel}</span>
+        <p className="mt-2 text-xs text-muted-foreground space-x-1">
+          <span className="font-medium">{item.kind}</span>
+          <span>·</span>
+          <span>{item.editedLabel}</span>
         </p>
       </div>
     </article>
@@ -290,7 +309,7 @@ export function LibraryView() {
 
         {/* Results */}
         {filtered.length === 0 ? (
-          <div className="mt-6 flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
+          <div className="mt-12 flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
             <Search className="size-7 text-muted-foreground/60" />
             <p className="mt-3 text-sm font-medium text-foreground">
               No assets match
@@ -300,7 +319,7 @@ export function LibraryView() {
             </p>
           </div>
         ) : view === "grid" ? (
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filtered.map((it, i) => (
               <LibraryCard key={it.id} item={it} index={i} />
             ))}
