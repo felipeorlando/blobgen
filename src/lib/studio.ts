@@ -571,3 +571,254 @@ export const SUGGESTIONS: Record<string, string[]> = {
     "A 60s Short on a strange historical law",
   ],
 };
+
+/* -------------------------------------------------------------------------- */
+/*  Library (full asset archive)                                              */
+/* -------------------------------------------------------------------------- */
+
+export type AssetKind =
+  | "Long-form"
+  | "Short"
+  | "Cuts"
+  | "Thumbnail"
+  | "Script"
+  | "Voiceover";
+
+export type LibraryItem = {
+  id: string;
+  channelId: string;
+  title: string;
+  thumb: string;
+  kind: AssetKind;
+  visual: boolean;
+  status: ProjectStatus;
+  editedLabel: string;
+  meta: string;
+};
+
+const LIB_KINDS: AssetKind[] = [
+  "Long-form",
+  "Short",
+  "Cuts",
+  "Short",
+  "Thumbnail",
+  "Long-form",
+  "Script",
+  "Short",
+  "Cuts",
+  "Voiceover",
+  "Short",
+  "Long-form",
+  "Thumbnail",
+  "Short",
+  "Cuts",
+  "Script",
+];
+
+const LIB_STATUS: ProjectStatus[] = [
+  "Published",
+  "Published",
+  "Scheduled",
+  "Draft",
+  "Published",
+  "Rendering",
+  "Published",
+  "Published",
+  "Draft",
+  "Published",
+  "Scheduled",
+  "Published",
+  "Published",
+  "Draft",
+  "Published",
+  "Published",
+];
+
+const LIB_EDITS = [
+  "2 hours ago",
+  "yesterday",
+  "Jun 13",
+  "Jun 11",
+  "Jun 9",
+  "Jun 6",
+  "Jun 3",
+  "May 30",
+  "May 27",
+  "May 23",
+  "May 19",
+  "May 14",
+  "May 9",
+  "May 4",
+  "Apr 28",
+  "Apr 22",
+];
+
+function kindMeta(
+  kind: AssetKind,
+  rnd: () => number,
+): { meta: string; visual: boolean } {
+  const ss = () => String(Math.floor(rnd() * 60)).padStart(2, "0");
+  switch (kind) {
+    case "Long-form":
+      return { meta: `${6 + Math.floor(rnd() * 12)}:${ss()} min`, visual: true };
+    case "Short":
+      return { meta: `0:${String(20 + Math.floor(rnd() * 39)).padStart(2, "0")}`, visual: true };
+    case "Cuts":
+      return { meta: `${3 + Math.floor(rnd() * 6)} clips`, visual: true };
+    case "Thumbnail":
+      return { meta: "1280 x 720", visual: true };
+    case "Script":
+      return { meta: `${round(0.6 + rnd() * 2.4, 1)}k words`, visual: false };
+    case "Voiceover":
+      return { meta: `${1 + Math.floor(rnd() * 9)}:${ss()} min`, visual: false };
+  }
+}
+
+function buildLibrary(channel: Channel): LibraryItem[] {
+  return LIB_KINDS.map((kind, i) => {
+    const id = `${channel.id}-lib${i}`;
+    const rnd = seeded(hashSeed(id));
+    const { meta, visual } = kindMeta(kind, rnd);
+    return {
+      id,
+      channelId: channel.id,
+      title: channel.videoTitles[i % channel.videoTitles.length],
+      thumb: channel.thumbs[i % channel.thumbs.length],
+      kind,
+      visual,
+      status: LIB_STATUS[i % LIB_STATUS.length],
+      editedLabel: `Edited ${LIB_EDITS[i % LIB_EDITS.length]}`,
+      meta,
+    };
+  });
+}
+
+const LIBRARY_BY_CHANNEL: Record<string, LibraryItem[]> = Object.fromEntries(
+  CHANNELS.map((c) => [c.id, buildLibrary(c)]),
+);
+
+export function getLibrary(channelId: string): LibraryItem[] {
+  return LIBRARY_BY_CHANNEL[channelId] ?? [];
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Audience                                                                  */
+/* -------------------------------------------------------------------------- */
+
+export type LabeledPct = { label: string; pct: number };
+export type GeoRow = { country: string; pct: number };
+
+export type AudienceData = {
+  subscribers: number;
+  subsGained: number;
+  uniqueViewers: number;
+  returningRate: number;
+  avgViewLabel: string;
+  newViewers: number;
+  returning: number;
+  age: LabeledPct[];
+  countries: GeoRow[];
+  devices: LabeledPct[];
+  online: number[][];
+  subscriberTrend: number[];
+};
+
+/** Turn raw weights into integer percentages summing to exactly 100. */
+function normalizePct(weights: number[]): number[] {
+  const sum = weights.reduce((a, b) => a + b, 0) || 1;
+  const raw = weights.map((w) => (w / sum) * 100);
+  const floored = raw.map((r) => Math.floor(r));
+  const rem = 100 - floored.reduce((a, b) => a + b, 0);
+  const order = raw
+    .map((r, i) => ({ i, frac: r - Math.floor(r) }))
+    .sort((a, b) => b.frac - a.frac);
+  for (let k = 0; k < rem; k++) floored[order[k % order.length].i] += 1;
+  return floored;
+}
+
+const AGE_LABELS = ["13-17", "18-24", "25-34", "35-44", "45-54", "55+"];
+const COUNTRY_POOL = [
+  "United States",
+  "United Kingdom",
+  "India",
+  "Canada",
+  "Germany",
+  "Australia",
+  "Brazil",
+  "Philippines",
+];
+const DEVICE_LABELS = ["Mobile", "Desktop", "TV", "Tablet"];
+
+export function getAudience(channelId: string): AudienceData {
+  const channel = getChannel(channelId);
+  const videos = getVideos(channelId);
+  const rnd = seeded(hashSeed(`${channelId}-audience`));
+
+  const subscribers = channel.subscribers;
+  const subsGained = Math.round(subscribers * (0.01 + rnd() * 0.05));
+  const uniqueViewers = Math.round(
+    videos.reduce((a, v) => a + v.views, 0) * (0.32 + rnd() * 0.26),
+  );
+  const returningRate = Math.round(38 + rnd() * 32);
+  const totalSecs = 70 + Math.floor(rnd() * 250);
+  const avgViewLabel = `${Math.floor(totalSecs / 60)}:${String(totalSecs % 60).padStart(2, "0")}`;
+  const returning = Math.round(34 + rnd() * 30);
+  const newViewers = 100 - returning;
+
+  const peak = Math.floor(rnd() * 3) + 1;
+  const age = AGE_LABELS.map((label) => ({ label, pct: 0 }));
+  const agePct = normalizePct(
+    AGE_LABELS.map((_, i) => Math.max(0.4, 3 - Math.abs(i - peak)) + rnd() * 0.6),
+  );
+  age.forEach((a, i) => (a.pct = agePct[i]));
+
+  const geoPct = normalizePct(COUNTRY_POOL.map(() => 0.2 + rnd()));
+  const countries = COUNTRY_POOL.map((country, i) => ({
+    country,
+    pct: geoPct[i],
+  }))
+    .sort((a, b) => b.pct - a.pct)
+    .slice(0, 6);
+
+  const devPct = normalizePct([
+    3.2 + rnd(),
+    1.3 + rnd(),
+    0.5 + rnd() * 0.8,
+    0.4 + rnd() * 0.6,
+  ]);
+  const devices = DEVICE_LABELS.map((label, i) => ({ label, pct: devPct[i] }));
+
+  const online = Array.from({ length: 7 }, (_, day) =>
+    Array.from({ length: 12 }, (_, slot) => {
+      const evening = slot >= 8 && slot <= 11 ? 1.6 : slot >= 6 ? 1.1 : 0.5;
+      const weekend = day >= 5 ? 1.15 : 1;
+      const r = rnd() * evening * weekend;
+      if (r < 0.4) return 0;
+      if (r < 0.8) return 1;
+      if (r < 1.15) return 2;
+      if (r < 1.5) return 3;
+      return 4;
+    }),
+  );
+
+  let base = 0.36 + rnd() * 0.18;
+  const subscriberTrend = Array.from({ length: 14 }, () => {
+    base = Math.min(0.97, base + rnd() * 0.06);
+    return round(base * 100, 1);
+  });
+
+  return {
+    subscribers,
+    subsGained,
+    uniqueViewers,
+    returningRate,
+    avgViewLabel,
+    newViewers,
+    returning,
+    age,
+    countries,
+    devices,
+    online,
+    subscriberTrend,
+  };
+}

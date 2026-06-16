@@ -33,7 +33,12 @@ const CREATE: NavItem[] = [
     icon: Sparkles,
     match: (p) => p === "/studio",
   },
-  { label: "Library", icon: Library },
+  {
+    label: "Library",
+    href: "/studio/library",
+    icon: Library,
+    match: (p) => p.startsWith("/studio/library"),
+  },
   { label: "Schedule", icon: CalendarClock },
 ];
 
@@ -44,7 +49,12 @@ const INSIGHTS: NavItem[] = [
     icon: BarChart3,
     match: (p) => p.startsWith("/studio/analytics"),
   },
-  { label: "Audience", icon: Users },
+  {
+    label: "Audience",
+    href: "/studio/audience",
+    icon: Users,
+    match: (p) => p.startsWith("/studio/audience"),
+  },
 ];
 
 function NavRow({

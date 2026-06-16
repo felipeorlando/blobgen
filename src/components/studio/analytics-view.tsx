@@ -14,7 +14,7 @@ import {
 import { StudioTopbar } from "./studio-topbar";
 import { KpiCard } from "./kpi-card";
 import { RetentionChart } from "./retention-chart";
-import { VideoRail } from "./video-rail";
+import { AnalyticsScope } from "./analytics-scope";
 import { AiInsights } from "./ai-insights";
 import { FormatSplit } from "./format-split";
 import { UploadHeatmap } from "./upload-heatmap";
@@ -54,46 +54,53 @@ export function AnalyticsView() {
       </StudioTopbar>
 
       <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8">
-        {/* Channel identity */}
-        <div className="mb-6 flex items-center gap-3.5">
-          <Image
-            src={channel.image}
-            alt=""
-            width={56}
-            height={56}
-            className="size-12 rounded-lg object-cover ring-1 ring-inset ring-black/10 sm:size-14 dark:ring-white/10"
-          />
-          <div className="min-w-0 flex-1">
-            <h2 className="truncate text-xl font-bold tracking-tight sm:text-2xl">
-              {channel.name}
-            </h2>
-            <p className="truncate text-sm text-muted-foreground">
-              {channel.handle} · {compact(channel.subscribers)} subscribers ·{" "}
-              <span className="text-emerald-600 dark:text-emerald-400">
-                {signed(analytics.subsGained, "")} this month
-              </span>
-            </p>
+        {/* Channel identity + scope selector */}
+        <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3.5">
+            <Image
+              src={channel.image}
+              alt=""
+              width={56}
+              height={56}
+              className="size-12 rounded-lg object-cover ring-1 ring-inset ring-black/10 sm:size-14 dark:ring-white/10"
+            />
+            <div className="min-w-0">
+              <h2 className="truncate text-xl font-bold tracking-tight sm:text-2xl">
+                {channel.name}
+              </h2>
+              <p className="truncate text-sm text-muted-foreground">
+                {channel.handle} · {compact(channel.subscribers)} subscribers ·{" "}
+                <span className="text-emerald-600 dark:text-emerald-400">
+                  {signed(analytics.subsGained, "")} this month
+                </span>
+              </p>
+            </div>
           </div>
-          <div className="hidden shrink-0 items-center gap-2 sm:flex">
-            <span className="rounded-md border border-border bg-card px-3 py-2 text-center">
-              <span className="block font-mono text-lg font-bold leading-none text-foreground">
-                {analytics.grade}
-              </span>
-              <span className="text-[0.62rem] text-muted-foreground">Grade</span>
+
+          <div className="flex items-center gap-2.5">
+            <span className="hidden text-xs font-medium text-muted-foreground sm:inline">
+              Showing
             </span>
+            <AnalyticsScope
+              channel={channel}
+              videos={videos}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+              channelRetention={analytics.retention}
+            />
           </div>
         </div>
 
         {/* KPI row */}
-        <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {kpis.map((kpi, i) => (
             <KpiCard key={kpi.key} kpi={kpi} index={i} />
           ))}
         </div>
 
-        {/* Main grid */}
-        <div className="mt-5 grid gap-5 lg:grid-cols-3">
-          <div className="space-y-5 lg:col-span-2">
+        {/* Retention + insights */}
+        <div className="mt-5 grid items-start gap-4 lg:grid-cols-3">
+          <div className="lg:col-span-2">
             <RetentionChart
               curve={selected ? selected.curve : analytics.curve}
               average={selected ? selected.retention : analytics.retention}
@@ -103,18 +110,17 @@ export function AnalyticsView() {
                   : `Channel average across ${videos.length} uploads`
               }
             />
-            <VideoRail
-              videos={videos}
-              selectedId={selectedId}
-              onSelect={setSelectedId}
-            />
           </div>
-          <div className="space-y-5">
-            <AiInsights analytics={analytics} />
-            <FormatSplit
-              shorts={analytics.formatSplit.shorts}
-              long={analytics.formatSplit.long}
-            />
+          <AiInsights analytics={analytics} />
+        </div>
+
+        {/* Format mix + cadence */}
+        <div className="mt-4 grid items-start gap-4 lg:grid-cols-3">
+          <FormatSplit
+            shorts={analytics.formatSplit.shorts}
+            long={analytics.formatSplit.long}
+          />
+          <div className="lg:col-span-2">
             <UploadHeatmap data={analytics.heatmap} />
           </div>
         </div>
