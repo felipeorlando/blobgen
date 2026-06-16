@@ -158,8 +158,6 @@ export function RetentionChart({
             strokeLinecap="round"
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
-            pathLength={1}
-            className="chart-draw"
           />
 
           {/* hover guide */}

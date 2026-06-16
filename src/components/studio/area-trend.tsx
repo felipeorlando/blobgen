@@ -79,8 +79,6 @@ export function AreaTrend({
             strokeLinecap="round"
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
-            pathLength={1}
-            className="chart-draw"
           />
         </svg>
         <div
