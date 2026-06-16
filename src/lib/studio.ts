@@ -1,0 +1,573 @@
+/**
+ * Mock data + helpers for the blobgen.ai studio demo (frontend only).
+ *
+ * Everything here is deterministic: a tiny seeded PRNG drives the numbers so the
+ * server and client render identical markup (no hydration drift, no Date.now /
+ * Math.random at module load). Switching the active channel re-derives every
+ * metric, so the whole analytics surface visibly changes per channel.
+ */
+
+import type { LucideIcon } from "lucide-react";
+import {
+  AudioLines,
+  Captions,
+  FileText,
+  Image as ImageIcon,
+  Scissors,
+  Clapperboard,
+  Smartphone,
+} from "lucide-react";
+
+/* -------------------------------------------------------------------------- */
+/*  Deterministic PRNG                                                         */
+/* -------------------------------------------------------------------------- */
+
+/** mulberry32 — pure, seeded, no global state. Same seed → same sequence. */
+function seeded(seed: number): () => number {
+  let t = seed >>> 0;
+  return () => {
+    t = (t + 0x6d2b79f5) >>> 0;
+    let x = Math.imul(t ^ (t >>> 15), 1 | t);
+    x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x;
+    return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Hash a string into a stable 32-bit seed. */
+function hashSeed(str: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+const round = (n: number, dp = 1) => {
+  const f = 10 ** dp;
+  return Math.round(n * f) / f;
+};
+
+/* -------------------------------------------------------------------------- */
+/*  Formatting                                                                */
+/* -------------------------------------------------------------------------- */
+
+export function compact(n: number): string {
+  if (n >= 1_000_000) return `${round(n / 1_000_000, 1)}M`;
+  if (n >= 1_000) return `${round(n / 1_000, 1)}K`;
+  return `${n}`;
+}
+
+export function signed(n: number, suffix = "%"): string {
+  const v = round(n, 1);
+  return `${v > 0 ? "+" : ""}${v}${suffix}`;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Output formats (New Idea page)                                            */
+/* -------------------------------------------------------------------------- */
+
+export type OutputFormat = {
+  id: string;
+  label: string;
+  hint: string;
+  icon: LucideIcon;
+  ratio: string;
+};
+
+export const OUTPUT_FORMATS: OutputFormat[] = [
+  { id: "long", label: "Long-form video", hint: "Widescreen 16:9", icon: Clapperboard, ratio: "16:9" },
+  { id: "short", label: "Short", hint: "Vertical 9:16", icon: Smartphone, ratio: "9:16" },
+  { id: "cuts", label: "Cuts", hint: "Clips from the long-form", icon: Scissors, ratio: "Clip" },
+  { id: "thumbnail", label: "Thumbnail", hint: "Cover art", icon: ImageIcon, ratio: "4:3" },
+  { id: "script", label: "Script", hint: "Hook to outro", icon: FileText, ratio: "Doc" },
+  { id: "voiceover", label: "Voiceover", hint: "AI narration", icon: AudioLines, ratio: "Audio" },
+  { id: "captions", label: "Captions", hint: "Burned-in SRT", icon: Captions, ratio: "SRT" },
+];
+
+export const ASPECT_RATIOS = ["9:16", "1:1", "4:5", "16:9"] as const;
+export const DURATIONS = ["15s", "30s", "60s", "3 min"] as const;
+
+export type VoiceStyle = { id: string; label: string };
+export const VOICE_STYLES: VoiceStyle[] = [
+  { id: "calm", label: "Calm narrator" },
+  { id: "punchy", label: "Punchy hook" },
+  { id: "documentary", label: "Documentary" },
+  { id: "asmr", label: "Soft ASMR" },
+];
+
+/* -------------------------------------------------------------------------- */
+/*  Channels                                                                  */
+/* -------------------------------------------------------------------------- */
+
+export type Channel = {
+  id: string;
+  name: string;
+  handle: string;
+  niche: string;
+  image: string;
+  thumbs: string[];
+  videoTitles: string[];
+  subscribers: number;
+  grade: string;
+  joinedLabel: string;
+};
+
+const CHANNELS_RAW: Omit<Channel, "subscribers" | "grade">[] = [
+  {
+    id: "stoic",
+    name: "Stoic Mornings",
+    handle: "@stoicmornings",
+    niche: "Philosophy & discipline",
+    image: "/images/motivation.jpg",
+    joinedLabel: "Operating since 2024",
+    thumbs: [
+      "/images/motivation.jpg",
+      "/images/lion.jpg",
+      "/images/mountains.jpg",
+      "/images/desk.jpg",
+      "/images/notebook.jpg",
+      "/images/hourglass.jpg",
+    ],
+    videoTitles: [
+      "The 5am rule that rewired my focus",
+      "Marcus Aurelius on dealing with rude people",
+      "Why discipline beats motivation every time",
+      "How to stay calm when everything breaks",
+      "The Stoic morning routine, in 60 seconds",
+      "Read this before you quit",
+      "Negative visualization, actually explained",
+      "One question that kills procrastination",
+    ],
+  },
+  {
+    id: "ledger",
+    name: "Ledger & Latte",
+    handle: "@ledgerlatte",
+    niche: "Money, explained slowly",
+    image: "/images/finance.jpg",
+    joinedLabel: "Operating since 2023",
+    thumbs: [
+      "/images/finance.jpg",
+      "/images/desk.jpg",
+      "/images/city.jpg",
+      "/images/tech.jpg",
+      "/images/notebook.jpg",
+      "/images/blueberries.jpg",
+    ],
+    videoTitles: [
+      "Why your savings lose money while you sleep",
+      "The 50/30/20 budget nobody actually follows",
+      "Compound interest is quietly insane",
+      "I tracked every coffee for a year",
+      "Index funds vs the lottery brain",
+      "The real cost of buy now, pay later",
+      "How banks make money off your float",
+      "Three numbers that run your whole budget",
+    ],
+  },
+  {
+    id: "cosmic",
+    name: "Cosmic Lull",
+    handle: "@cosmiclull",
+    niche: "Sleep stories from space",
+    image: "/images/space.jpg",
+    joinedLabel: "Operating since 2025",
+    thumbs: [
+      "/images/space.jpg",
+      "/images/mountains.jpg",
+      "/images/travel.jpg",
+      "/images/city.jpg",
+      "/images/hourglass.jpg",
+    ],
+    videoTitles: [
+      "A slow tour of Saturn's rings",
+      "What falling into a black hole sounds like",
+      "Drifting past the Voyager probe",
+      "The quietest place in the solar system",
+      "Sleep story: the edge of the Milky Way",
+      "Why the night sky is running out of dark",
+      "Ten minutes alone on Europa",
+    ],
+  },
+  {
+    id: "echo",
+    name: "Echoes of History",
+    handle: "@echoeshistory",
+    niche: "History in 60 seconds",
+    image: "/images/history.jpg",
+    joinedLabel: "Operating since 2022",
+    thumbs: [
+      "/images/history.jpg",
+      "/images/hourglass.jpg",
+      "/images/city.jpg",
+      "/images/travel.jpg",
+      "/images/lion.jpg",
+    ],
+    videoTitles: [
+      "The library that burned for a decade",
+      "How a single typo started a war",
+      "The last day of Pompeii, hour by hour",
+      "Rome had a traffic problem in 50 BC",
+      "The map that was wrong for 300 years",
+      "What Vikings actually ate for breakfast",
+      "The night two cities swapped names",
+    ],
+  },
+];
+
+const GRADES = ["A", "A-", "B+", "B"];
+
+export const CHANNELS: Channel[] = CHANNELS_RAW.map((c) => {
+  const rnd = seeded(hashSeed(c.id));
+  const subscribers = Math.round((6 + rnd() * 150) * 1000);
+  const grade = GRADES[Math.floor(rnd() * GRADES.length)];
+  return { ...c, subscribers, grade };
+});
+
+export function getChannel(id: string): Channel {
+  return CHANNELS.find((c) => c.id === id) ?? CHANNELS[0];
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Retention curve generator                                                 */
+/* -------------------------------------------------------------------------- */
+
+/** A believable audience-retention curve: hooks high, drops fast, wobbles, drifts. */
+export function retentionCurve(seedStr: string, points = 30): number[] {
+  const rnd = seeded(hashSeed(seedStr));
+  const hookDrop = 0.2 + rnd() * 0.12;
+  const base = 0.44 + rnd() * 0.14;
+  const wob = 0.05 + rnd() * 0.05;
+  const phase = rnd() * Math.PI * 2;
+  const endBias = (rnd() - 0.4) * 0.18;
+  const out: number[] = [];
+  for (let i = 0; i < points; i++) {
+    const t = i / (points - 1);
+    const hook = 1 - hookDrop * Math.min(1, t * 3.4);
+    const settle = base + (hook - base) * Math.exp(-2.6 * t);
+    const wave = Math.sin(t * Math.PI * 3 + phase) * wob * (0.5 + t);
+    let v = settle + wave + endBias * t;
+    v = Math.max(0.14, Math.min(0.99, v));
+    out.push(round(v * 100, 1));
+  }
+  out[0] = round(97 + rnd() * 2.5, 1);
+  return out;
+}
+
+const avg = (arr: number[]) => arr.reduce((a, b) => a + b, 0) / arr.length;
+
+/* -------------------------------------------------------------------------- */
+/*  Videos                                                                     */
+/* -------------------------------------------------------------------------- */
+
+export type VideoFormat = "Short" | "Long-form";
+
+export type Video = {
+  id: string;
+  channelId: string;
+  title: string;
+  thumb: string;
+  format: VideoFormat;
+  durationLabel: string;
+  publishedLabel: string;
+  views: number;
+  ctr: number;
+  retention: number;
+  curve: number[];
+  flagged: boolean;
+};
+
+const DATE_LABELS = [
+  "Jun 14, 2026",
+  "Jun 9, 2026",
+  "Jun 3, 2026",
+  "May 27, 2026",
+  "May 21, 2026",
+  "May 14, 2026",
+  "May 6, 2026",
+  "Apr 29, 2026",
+];
+
+function buildVideos(channel: Channel): Video[] {
+  return channel.videoTitles.map((title, i) => {
+    const id = `${channel.id}-v${i}`;
+    const rnd = seeded(hashSeed(id));
+    const curve = retentionCurve(id);
+    const isShort = rnd() > 0.42;
+    const views = Math.round((8 + rnd() * 480) * 1000);
+    const ctr = round(4.4 + rnd() * 5.2, 1);
+    const retention = round(avg(curve), 1);
+    return {
+      id,
+      channelId: channel.id,
+      title,
+      thumb: channel.thumbs[i % channel.thumbs.length],
+      format: isShort ? "Short" : "Long-form",
+      durationLabel: isShort
+        ? `0:${String(20 + Math.floor(rnd() * 40)).padStart(2, "0")}`
+        : `${4 + Math.floor(rnd() * 8)}:${String(Math.floor(rnd() * 60)).padStart(2, "0")}`,
+      publishedLabel: DATE_LABELS[i % DATE_LABELS.length],
+      views,
+      ctr,
+      retention,
+      curve,
+      flagged: retention < 45,
+    };
+  });
+}
+
+const VIDEOS_BY_CHANNEL: Record<string, Video[]> = Object.fromEntries(
+  CHANNELS.map((c) => [c.id, buildVideos(c)]),
+);
+
+export function getVideos(channelId: string): Video[] {
+  return VIDEOS_BY_CHANNEL[channelId] ?? [];
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Channel-level analytics                                                   */
+/* -------------------------------------------------------------------------- */
+
+export type Kpi = {
+  key: string;
+  label: string;
+  value: string;
+  raw: number;
+  delta: number;
+  spark: number[];
+};
+
+export type ChannelAnalytics = {
+  retention: number;
+  ctr: number;
+  views: number;
+  watchHours: number;
+  subsGained: number;
+  grade: string;
+  curve: number[];
+  formatSplit: { shorts: number; long: number };
+  heatmap: number[][];
+  insight: {
+    headline: string;
+    body: string;
+    bestElement: string;
+    action: string;
+    sentiment: "Excellent" | "Strong" | "Watch";
+  };
+};
+
+function sparkline(seedStr: string, n = 12): number[] {
+  const rnd = seeded(hashSeed(seedStr));
+  let v = 0.5;
+  const out: number[] = [];
+  for (let i = 0; i < n; i++) {
+    v = Math.max(0.1, Math.min(0.95, v + (rnd() - 0.45) * 0.28));
+    out.push(round(v * 100, 1));
+  }
+  return out;
+}
+
+/** 7 days x 10 weeks upload-cadence intensity grid (0..4), deterministic. */
+function heatmap(seedStr: string): number[][] {
+  const rnd = seeded(hashSeed(seedStr));
+  return Array.from({ length: 7 }, (_, day) =>
+    Array.from({ length: 10 }, () => {
+      const weekend = day >= 5 ? 0.35 : 1;
+      const r = rnd() * weekend;
+      if (r < 0.32) return 0;
+      if (r < 0.55) return 1;
+      if (r < 0.74) return 2;
+      if (r < 0.9) return 3;
+      return 4;
+    }),
+  );
+}
+
+const INSIGHTS: Record<
+  string,
+  Pick<ChannelAnalytics["insight"], "headline" | "body" | "bestElement" | "action">
+> = {
+  stoic: {
+    headline: "Hooks are landing, middles are leaking",
+    body: "Viewers stay through the first 8 seconds at an unusually high rate, but a dip around the 35% mark suggests the second beat runs long. Tightening the mid-section could lift average retention by an estimated 6 points.",
+    bestElement: "Opening hook",
+    action: "Trim the middle beat",
+  },
+  ledger: {
+    headline: "Thumbnails are doing the heavy lifting",
+    body: "Click-through sits well above your category benchmark, so packaging is working. Retention is steady rather than spiking, which points to pacing. Try a sharper payoff in the final 10 seconds to convert watch time into subscribers.",
+    bestElement: "Thumbnail and title",
+    action: "Add a stronger payoff",
+  },
+  cosmic: {
+    headline: "Long sessions, soft click-through",
+    body: "Average view duration is excellent for the sleep niche, with very flat retention after the intro. The opportunity is discovery: click-through trails the others, so the next test should be brighter cover art and a clearer promise in the title.",
+    bestElement: "Average view duration",
+    action: "Test brighter cover art",
+  },
+  echo: {
+    headline: "Consistent, but plateauing",
+    body: "Your cadence is steady and retention is reliable across uploads. Growth has flattened, which usually means the format is mature. A short series with cliffhanger endings could reignite session starts and returning viewers.",
+    bestElement: "Upload consistency",
+    action: "Try a serialized arc",
+  },
+};
+
+export function getAnalytics(channelId: string): ChannelAnalytics {
+  const channel = getChannel(channelId);
+  const videos = getVideos(channelId);
+  const retention = round(avg(videos.map((v) => v.retention)), 1);
+  const ctr = round(avg(videos.map((v) => v.ctr)), 1);
+  const views = videos.reduce((a, v) => a + v.views, 0);
+  const rnd = seeded(hashSeed(`${channelId}-agg`));
+  const watchHours = Math.round((views / 1000) * (1.1 + rnd() * 1.6));
+  const subsGained = Math.round(channel.subscribers * (0.01 + rnd() * 0.05));
+  const shorts = Math.round(40 + rnd() * 45);
+  const sentiment: ChannelAnalytics["insight"]["sentiment"] =
+    retention >= 60 ? "Excellent" : retention >= 50 ? "Strong" : "Watch";
+
+  return {
+    retention,
+    ctr,
+    views,
+    watchHours,
+    subsGained,
+    grade: channel.grade,
+    curve: retentionCurve(`${channelId}-channel`),
+    formatSplit: { shorts, long: 100 - shorts },
+    heatmap: heatmap(`${channelId}-heat`),
+    insight: { ...INSIGHTS[channelId], sentiment },
+  };
+}
+
+/** KPI cards for a channel, or for a specific selected video when provided. */
+export function getKpis(channelId: string, video?: Video | null): Kpi[] {
+  const a = getAnalytics(channelId);
+  const rnd = seeded(hashSeed(video ? video.id : `${channelId}-kpi`));
+  const d = () => round((rnd() - 0.42) * 26, 1);
+
+  const retention = video ? video.retention : a.retention;
+  const ctr = video ? video.ctr : a.ctr;
+  const views = video ? video.views : a.views;
+  const watch = video ? Math.round(video.views / 1000 * 1.4) : a.watchHours;
+
+  return [
+    {
+      key: "retention",
+      label: "Avg. retention",
+      value: `${retention}%`,
+      raw: retention,
+      delta: d(),
+      spark: sparkline(`${video?.id ?? channelId}-r`),
+    },
+    {
+      key: "ctr",
+      label: "Click-through",
+      value: `${ctr}%`,
+      raw: ctr,
+      delta: d(),
+      spark: sparkline(`${video?.id ?? channelId}-c`),
+    },
+    {
+      key: "views",
+      label: "Views",
+      value: compact(views),
+      raw: views,
+      delta: d(),
+      spark: sparkline(`${video?.id ?? channelId}-v`),
+    },
+    {
+      key: "watch",
+      label: "Watch time",
+      value: `${compact(watch)}h`,
+      raw: watch,
+      delta: d(),
+      spark: sparkline(`${video?.id ?? channelId}-w`),
+    },
+  ];
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Projects (New Idea page)                                                  */
+/* -------------------------------------------------------------------------- */
+
+export type ProjectStatus = "Published" | "Scheduled" | "Rendering" | "Draft";
+
+export type Project = {
+  id: string;
+  channelId: string;
+  title: string;
+  thumb: string;
+  format: VideoFormat;
+  status: ProjectStatus;
+  editedLabel: string;
+};
+
+const PROJECT_EDITS = [
+  "Edited 2 hours ago",
+  "Edited yesterday",
+  "Edited Jun 13",
+  "Edited Jun 10",
+  "Edited Jun 6",
+  "Edited Jun 1",
+];
+
+const STATUS_CYCLE: ProjectStatus[] = [
+  "Rendering",
+  "Scheduled",
+  "Published",
+  "Draft",
+  "Published",
+  "Published",
+];
+
+function buildProjects(channel: Channel): Project[] {
+  return channel.videoTitles.slice(0, 6).map((title, i) => {
+    const rnd = seeded(hashSeed(`${channel.id}-p${i}`));
+    return {
+      id: `${channel.id}-p${i}`,
+      channelId: channel.id,
+      title,
+      thumb: channel.thumbs[(i + 1) % channel.thumbs.length],
+      format: rnd() > 0.5 ? "Short" : "Long-form",
+      status: STATUS_CYCLE[i % STATUS_CYCLE.length],
+      editedLabel: PROJECT_EDITS[i % PROJECT_EDITS.length],
+    };
+  });
+}
+
+const PROJECTS_BY_CHANNEL: Record<string, Project[]> = Object.fromEntries(
+  CHANNELS.map((c) => [c.id, buildProjects(c)]),
+);
+
+export function getProjects(channelId: string): Project[] {
+  return PROJECTS_BY_CHANNEL[channelId] ?? [];
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Prompt suggestions (New Idea page)                                        */
+/* -------------------------------------------------------------------------- */
+
+export const SUGGESTIONS: Record<string, string[]> = {
+  stoic: [
+    "A 12-minute essay on morning discipline, plus 5 cuts",
+    "One idea as both a long-form and a Short",
+    "Turn a Marcus Aurelius quote into a 45s Short",
+  ],
+  ledger: [
+    "A 10-minute deep dive on compound interest",
+    "Cut a finance long-form into 6 vertical Shorts",
+    "Long-form plus Shorts from one script",
+  ],
+  cosmic: [
+    "A 20-minute sleep journey to Jupiter, with cuts",
+    "One nebula tour as long-form and Shorts",
+    "A calm 60s Short about the size of the universe",
+  ],
+  echo: [
+    "A long-form mini-doc on the fall of Pompeii",
+    "Turn this story into a video plus 4 cuts",
+    "A 60s Short on a strange historical law",
+  ],
+};
