@@ -264,3 +264,130 @@
     scrollbar-width: none;
   }
 }
+
+/* Linear progress fill for auto-advancing step indicators. Driven inline with
+   a per-step duration and remounted (key) so it restarts on each step. */
+@keyframes pipe-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Pulse that travels along a pipeline connector wire. */
+@keyframes pipe-pulse {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+/* Continuously sweeping highlight that rides along a filled wire to suggest
+   live energy moving through the pipeline. Applied to a clipped overlay. */
+.pipe-flow {
+  animation: pipe-pulse 1.7s linear infinite;
+}
+
+/* Faint engineering grid + ambient red wash behind the step-by-step canvases.
+   Masked so it dissolves toward the edges instead of boxing the content in. */
+.pipe-canvas {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 44px 44px, 44px 44px;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(120% 80% at 50% 35%, #000 25%, transparent 78%);
+  mask-image: radial-gradient(120% 80% at 50% 35%, #000 25%, transparent 78%);
+  opacity: 0.5;
+}
+
+/* --- motion primitives for step-by-step versions 4–6 --- */
+@keyframes pipe-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+@keyframes pipe-type {
+  from {
+    width: 0;
+  }
+}
+@keyframes pipe-caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes pipe-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+@keyframes pipe-pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Sweeping skeleton highlight (loading / processing surfaces). */
+.pipe-shimmer {
+  background-size: 200% 100%;
+  animation: pipe-shimmer 1.6s linear infinite;
+}
+/* Typewriter line: contained inline-block so its width tween never reflows
+   siblings. Pair with .pipe-caret for the blinking cursor. */
+.pipe-type {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: pipe-type 1.7s steps(30) both;
+}
+.pipe-caret::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 2px;
+  background: currentColor;
+  vertical-align: text-bottom;
+  animation: pipe-caret 1s step-end infinite;
+}
+.pipe-float {
+  animation: pipe-float 4s ease-in-out infinite;
+}
+.pipe-pop {
+  animation: pipe-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pipe-flow,
+  .pipe-shimmer,
+  .pipe-float,
+  .pipe-type,
+  .pipe-caret::after,
+  .pipe-pop {
+    animation: none;
+  }
+}
