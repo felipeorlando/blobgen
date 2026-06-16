@@ -174,7 +174,7 @@ export function Pricing() {
                 </ul>
 
                 <a
-                  href="#"
+                  href="/onboarding"
                   className={cn(
                     buttonVariants({
                       variant: plan.popular ? "default" : "secondary",

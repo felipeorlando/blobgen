@@ -510,7 +510,7 @@ function CtaBar() {
         </div>
         <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row">
           <a
-            href="#pricing"
+            href="/onboarding"
             className={cn(
               buttonVariants({ variant: "default" }),
               "h-11 rounded-xl px-6 text-sm font-semibold glow-red hover:bg-primary",

@@ -58,7 +58,7 @@ export function Hero() {
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
-              href="#pricing"
+              href="/onboarding"
               className={cn(
                 buttonVariants({ variant: "default" }),
                 "h-12 w-full rounded-xl px-7 text-base font-semibold glow-red hover:bg-primary sm:w-auto",

@@ -41,19 +41,19 @@ export function SiteHeader() {
 
         <div className="hidden items-center gap-2 lg:flex">
           <a
-            href="/studio"
+            href="/onboarding?mode=signin"
             className="px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Sign in
           </a>
           <a
-            href="/studio"
+            href="/onboarding"
             className={cn(
               buttonVariants({ variant: "default" }),
               "h-10 rounded-xl px-5 text-sm font-semibold glow-red hover:bg-primary",
             )}
           >
-            Open studio
+            Get started
           </a>
         </div>
 
@@ -85,20 +85,20 @@ export function SiteHeader() {
           </nav>
           <div className="mt-3 flex flex-col gap-2">
             <a
-              href="/studio"
+              href="/onboarding?mode=signin"
               className={cn(buttonVariants({ variant: "secondary" }), "h-11 rounded-xl text-sm font-semibold")}
             >
               Sign in
             </a>
             <a
-              href="/studio"
+              href="/onboarding"
               onClick={() => setOpen(false)}
               className={cn(
                 buttonVariants({ variant: "default" }),
                 "h-11 rounded-xl text-sm font-semibold glow-red hover:bg-primary",
               )}
             >
-              Open studio
+              Get started
             </a>
           </div>
         </div>

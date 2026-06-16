@@ -112,7 +112,7 @@ export function SiteFooter() {
               Join creators who automate and scale with AI.
             </p>
             <a
-              href="#pricing"
+              href="/onboarding"
               className={cn(
                 buttonVariants({ variant: "default" }),
                 "mt-5 h-11 w-full rounded-xl text-sm font-semibold glow-red hover:bg-primary",
