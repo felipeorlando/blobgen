@@ -545,6 +545,15 @@ export function getProjects(channelId: string): Project[] {
   return PROJECTS_BY_CHANNEL[channelId] ?? [];
 }
 
+/** Look up a single project by id across every channel (for the editor route). */
+export function getProjectById(id: string): Project | undefined {
+  for (const list of Object.values(PROJECTS_BY_CHANNEL)) {
+    const found = list.find((p) => p.id === id);
+    if (found) return found;
+  }
+  return undefined;
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Prompt suggestions (New Idea page)                                        */
 /* -------------------------------------------------------------------------- */

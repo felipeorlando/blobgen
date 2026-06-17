@@ -3,6 +3,15 @@
 import type { ComponentType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  Clapperboard,
+  FlaskConical,
+  Image as ImageIcon,
+  Library,
+  Mic,
+  Music,
+  Scissors,
+} from "lucide-react";
 import { AnimateIcon } from "@/components/animate-ui/icons/icon";
 import { Sparkles } from "@/components/animate-ui/icons/sparkles";
 import { Layers } from "@/components/animate-ui/icons/layers";
@@ -41,6 +50,51 @@ const CREATE: NavItem[] = [
     href: "/studio/schedule",
     icon: Clock,
     match: (p) => p.startsWith("/studio/schedule"),
+  },
+  {
+    label: "Editor",
+    href: "/studio/editor",
+    icon: Scissors,
+    match: (p) => p.startsWith("/studio/editor"),
+  },
+];
+
+const LABS: NavItem[] = [
+  {
+    label: "Labs",
+    href: "/studio/labs",
+    icon: FlaskConical,
+    match: (p) => p === "/studio/labs",
+  },
+  {
+    label: "Image",
+    href: "/studio/labs/image",
+    icon: ImageIcon,
+    match: (p) => p.startsWith("/studio/labs/image"),
+  },
+  {
+    label: "Video",
+    href: "/studio/labs/video",
+    icon: Clapperboard,
+    match: (p) => p.startsWith("/studio/labs/video"),
+  },
+  {
+    label: "Voice",
+    href: "/studio/labs/voice",
+    icon: Mic,
+    match: (p) => p.startsWith("/studio/labs/voice"),
+  },
+  {
+    label: "Music",
+    href: "/studio/labs/music",
+    icon: Music,
+    match: (p) => p.startsWith("/studio/labs/music"),
+  },
+  {
+    label: "Media",
+    href: "/studio/labs/media",
+    icon: Library,
+    match: (p) => p.startsWith("/studio/labs/media"),
   },
 ];
 
@@ -158,6 +212,18 @@ export function AppSidebar({
         <GroupLabel>Create</GroupLabel>
         <div className="flex flex-col gap-0.5">
           {CREATE.map((item) => (
+            <NavRow
+              key={item.label}
+              item={item}
+              active={item.match?.(pathname) ?? false}
+              onNavigate={onClose}
+            />
+          ))}
+        </div>
+
+        <GroupLabel>Labs</GroupLabel>
+        <div className="flex flex-col gap-0.5">
+          {LABS.map((item) => (
             <NavRow
               key={item.label}
               item={item}

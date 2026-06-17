@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from "lucide-react";
 import { LogOut, Settings2 } from "lucide-react";
+import Link from "next/link";
 import { Settings } from "@/components/animate-ui/icons/settings";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -11,13 +12,17 @@ function MenuItem({
   icon: Icon,
   label,
   danger,
+  href,
 }: {
   icon: LucideIcon;
   label: string;
   danger?: boolean;
+  /** When set, the item navigates (and closes the menu) instead of just closing. */
+  href?: string;
 }) {
   return (
     <PopoverClose
+      render={href ? <Link href={href} /> : undefined}
       className={cn(
         "flex w-full items-center gap-2.5 rounded-md px-2 py-2 text-left text-sm font-medium transition-colors",
         danger
@@ -79,7 +84,7 @@ export function UserMenu() {
 
         <div className="my-1 h-px bg-border/70" />
 
-        <MenuItem icon={Settings2} label="Settings" />
+        <MenuItem icon={Settings2} label="Settings" href="/studio/settings" />
 
         <div className="my-1 h-px bg-border/70" />
 
