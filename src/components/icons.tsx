@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 
-/** blobgen.ai logo mark — a red play button. */
+/** blobgen.ai logo mark — a brushed-silver play button. The mid-tone metal
+    fill keeps the mark legible on both the white and the true-black theme. */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg
@@ -10,12 +11,12 @@ export function LogoMark({ className }: { className?: string }) {
     >
       <defs>
         <linearGradient id="bg-logo" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#ff5252" />
-          <stop offset="100%" stopColor="#e10010" />
+          <stop offset="0%" stopColor="#c2c7ce" />
+          <stop offset="100%" stopColor="#777d86" />
         </linearGradient>
       </defs>
       <rect width="32" height="32" rx="9" fill="url(#bg-logo)" />
-      <path d="M13 10.2 L13 21.8 L22.4 16 Z" fill="#fff" />
+      <path d="M13 10.2 L13 21.8 L22.4 16 Z" fill="#26292e" />
     </svg>
   );
 }

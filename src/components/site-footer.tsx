@@ -115,7 +115,7 @@ export function SiteFooter() {
               href="/onboarding"
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "mt-5 h-11 w-full rounded-xl text-sm font-semibold glow-red hover:bg-primary",
+                "mt-5 h-11 w-full rounded-xl text-sm font-semibold glow-accent hover:bg-primary",
               )}
             >
               Start for free

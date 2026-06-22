@@ -19,7 +19,7 @@ export function PreviewPanel({ step }: { step: WizardStepId }) {
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(80% 60% at 50% 0%, oklch(0.617 0.243 26 / 0.12), transparent 70%)",
+            "radial-gradient(80% 60% at 50% 0%, oklch(0.82 0.008 265 / 0.1), transparent 70%)",
         }}
       />
       <div aria-hidden className="pipe-canvas pointer-events-none absolute inset-0" />
@@ -110,7 +110,7 @@ function ConnectPreview() {
           {DETECTED_CHANNELS.map((c) => (
             <span
               key={c.id}
-              className="size-12 overflow-hidden rounded-full ring-2 ring-[oklch(0.06_0.01_25)]"
+              className="size-12 overflow-hidden rounded-full ring-2 ring-[oklch(0.06_0.01_265)]"
             >
               <Image src={c.image} alt="" width={48} height={48} className="size-full object-cover" />
             </span>

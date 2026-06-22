@@ -49,7 +49,7 @@ export function Hero() {
           <h1 className="text-balance text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
             <span className="text-grad-light">Keyword in.</span>
             <br />
-            <span className="text-grad-red">YouTube Short out.</span>
+            <span className="text-grad-accent">YouTube Short out.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
             blobgen.ai turns any topic into a finished YouTube Short—script,
@@ -61,7 +61,7 @@ export function Hero() {
               href="/onboarding"
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "h-12 w-full rounded-xl px-7 text-base font-semibold glow-red hover:bg-primary sm:w-auto",
+                "h-12 w-full rounded-xl px-7 text-base font-semibold glow-accent hover:bg-primary sm:w-auto",
               )}
             >
               Start for free

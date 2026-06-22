@@ -65,7 +65,7 @@ export default function PipelineVariantsPage() {
             <Eyebrow icon={Sparkles}>Step-by-step concepts</Eyebrow>
             <h1 className="mt-6 text-balance text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
               <span className="text-grad-light">Three ways to show the </span>
-              <span className="text-grad-red">pipeline.</span>
+              <span className="text-grad-accent">pipeline.</span>
             </h1>
             <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               Each concept loops through the six steps automatically. Pick the one

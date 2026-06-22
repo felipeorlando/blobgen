@@ -40,13 +40,13 @@ export function AuthStep({ onNext }: { onNext: () => void }) {
       {/* ---------------------------------------------------------------- */}
       {/* Brand panel (cinematic) — hidden on small screens               */}
       {/* ---------------------------------------------------------------- */}
-      <aside className="relative hidden overflow-hidden bg-[oklch(0.06_0.01_25)] lg:flex lg:flex-col lg:justify-between dark:bg-[oklch(0.05_0.005_25)]">
+      <aside className="relative hidden overflow-hidden bg-[oklch(0.06_0.01_265)] lg:flex lg:flex-col lg:justify-between dark:bg-[oklch(0.05_0.005_265)]">
         <div className="glow-radial opacity-100" />
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.5]"
           style={{
             backgroundImage:
-              "radial-gradient(60% 50% at 30% 0%, oklch(0.617 0.243 26 / 0.18), transparent 70%)",
+              "radial-gradient(60% 50% at 30% 0%, oklch(0.82 0.008 265 / 0.16), transparent 70%)",
           }}
         />
         <div
@@ -71,7 +71,7 @@ export function AuthStep({ onNext }: { onNext: () => void }) {
               A faceless channel,
               <br />
               running itself by
-              <span className="text-grad-red"> tonight.</span>
+              <span className="text-grad-accent"> tonight.</span>
             </h2>
           </Reveal>
           <Reveal delay={160}>
@@ -88,7 +88,7 @@ export function AuthStep({ onNext }: { onNext: () => void }) {
               {PROOF_THUMBS.map((src) => (
                 <span
                   key={src}
-                  className="size-10 overflow-hidden rounded-full ring-2 ring-[oklch(0.06_0.01_25)]"
+                  className="size-10 overflow-hidden rounded-full ring-2 ring-[oklch(0.06_0.01_265)]"
                   style={{
                     backgroundImage: `url(${src})`,
                     backgroundSize: "cover",
@@ -193,7 +193,7 @@ export function AuthStep({ onNext }: { onNext: () => void }) {
 
                 <button
                   type="submit"
-                  className="glow-red mt-1 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-primary text-[0.9rem] font-semibold text-primary-foreground transition-[transform,background-color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-primary/90 active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100"
+                  className="glow-accent mt-1 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-primary text-[0.9rem] font-semibold text-primary-foreground transition-[transform,background-color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-primary/90 active:scale-[0.99] motion-reduce:transition-none motion-reduce:active:scale-100"
                 >
                   {isSignup ? "Create account" : "Sign in"}
                   <ArrowRight className="size-4" />

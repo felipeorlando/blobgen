@@ -86,7 +86,7 @@ export function VariantConsole() {
 
       {/* right: terminal output pane — always dark, like an editor */}
       <div className="overflow-hidden rounded-2xl border border-border shadow-[0_24px_50px_-20px_rgba(20,5,5,0.35)]">
-        <div className="flex items-center gap-2 border-b border-white/10 bg-[oklch(0.2_0.006_25)] px-4 py-2.5">
+        <div className="flex items-center gap-2 border-b border-white/10 bg-[oklch(0.2_0.006_265)] px-4 py-2.5">
           <span className="flex gap-1.5">
             <i className="size-2.5 rounded-full bg-white/15" />
             <i className="size-2.5 rounded-full bg-white/15" />
@@ -100,7 +100,7 @@ export function VariantConsole() {
             live
           </span>
         </div>
-        <div className="min-h-[372px] bg-[oklch(0.145_0.006_25)] p-5 font-mono text-[12.5px] leading-relaxed text-white/85">
+        <div className="min-h-[372px] bg-[oklch(0.145_0.006_265)] p-5 font-mono text-[12.5px] leading-relaxed text-white/85">
           <Output key={active} active={active} />
         </div>
       </div>

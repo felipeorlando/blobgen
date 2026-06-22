@@ -171,7 +171,7 @@ export function VariantPhone() {
           </div>
         </div>
 
-        <div className="relative aspect-[9/19] w-[280px] shrink-0 overflow-hidden rounded-[2.4rem] border-[6px] border-foreground/10 bg-[oklch(0.13_0.01_25)] shadow-2xl">
+        <div className="relative aspect-[9/19] w-[280px] shrink-0 overflow-hidden rounded-[2.4rem] border-[6px] border-foreground/10 bg-[oklch(0.13_0.01_265)] shadow-2xl">
           {/* b-roll fades in at the Visuals step */}
           <Image
             src="/images/tech.jpg"
@@ -234,7 +234,7 @@ export function VariantPhone() {
               <span className="-rotate-1 rounded bg-white px-2 py-1 text-[0.95rem] font-extrabold tracking-tight text-black shadow-md">
                 Best AI tools
               </span>
-              <span className="rotate-1 rounded bg-primary px-2 py-1 text-[0.95rem] font-extrabold tracking-tight text-white shadow-md">
+              <span className="rotate-1 rounded bg-primary px-2 py-1 text-[0.95rem] font-extrabold tracking-tight text-primary-foreground shadow-md">
                 for creators
               </span>
             </div>
