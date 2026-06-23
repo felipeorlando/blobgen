@@ -50,7 +50,7 @@ export function SiteHeader() {
             href="/onboarding"
             className={cn(
               buttonVariants({ variant: "default" }),
-              "h-10 rounded-xl px-5 text-sm font-semibold glow-red hover:bg-primary",
+              "h-10 rounded-xl px-5 text-sm font-semibold glow-accent hover:bg-primary",
             )}
           >
             Get started
@@ -95,7 +95,7 @@ export function SiteHeader() {
               onClick={() => setOpen(false)}
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "h-11 rounded-xl text-sm font-semibold glow-red hover:bg-primary",
+                "h-11 rounded-xl text-sm font-semibold glow-accent hover:bg-primary",
               )}
             >
               Get started

@@ -51,7 +51,7 @@ export function UseCases() {
           title={
             <>
               <span className="text-grad-light">One engine. </span>
-              <span className="text-grad-red">Endless Short ideas.</span>
+              <span className="text-grad-accent">Endless Short ideas.</span>
             </>
           }
           subtitle="blobgen.ai adapts to any niche—generating ideas, building your Short, and getting it live so you can scale what works."
@@ -116,7 +116,7 @@ export function UseCases() {
             href="#pricing"
             className={cn(
               buttonVariants({ variant: "default" }),
-              "h-12 rounded-xl px-7 text-base font-semibold glow-red hover:bg-primary",
+              "h-12 rounded-xl px-7 text-base font-semibold glow-accent hover:bg-primary",
             )}
           >
             Explore use cases

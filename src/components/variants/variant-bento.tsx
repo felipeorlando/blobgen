@@ -56,7 +56,7 @@ function BentoTile({
       className={cn(
         "group relative flex flex-col overflow-hidden rounded-[1.6rem] border p-5 text-left transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.99]",
         active
-          ? "z-10 border-primary/40 bg-card shadow-[0_24px_50px_-24px_oklch(0.6_0.24_26/0.45)] lg:scale-[1.015]"
+          ? "z-10 border-primary/40 bg-card shadow-[0_24px_50px_-24px_oklch(0.7_0.01_265/0.3)] lg:scale-[1.015]"
           : "border-border bg-card/40 opacity-75 hover:opacity-100",
         className,
       )}
@@ -127,7 +127,7 @@ function TileBody({ step, active }: { step: Step; active: boolean }) {
       return (
         <div className="flex flex-1 flex-col justify-center gap-3">
           <div className="flex items-center gap-2.5">
-            <span className="flex size-7 items-center justify-center rounded-full bg-gradient-to-br from-primary to-[oklch(0.5_0.243_28)] font-mono text-[11px] font-bold text-white">
+            <span className="flex size-7 items-center justify-center rounded-full bg-primary font-mono text-[11px] font-bold text-primary-foreground">
               EM
             </span>
             <span className="text-xs text-muted-foreground">Emma · en-US</span>

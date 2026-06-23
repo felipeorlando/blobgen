@@ -82,7 +82,7 @@ export function Pricing() {
           title={
             <>
               <span className="text-grad-light">Simple pricing for </span>
-              <span className="text-grad-red">creators who want consistency.</span>
+              <span className="text-grad-accent">creators who want consistency.</span>
             </>
           }
           subtitle="Turn any idea into high-quality YouTube Shorts—script, visuals, captions, and scheduling—on autopilot."
@@ -180,7 +180,7 @@ export function Pricing() {
                       variant: plan.popular ? "default" : "secondary",
                     }),
                     "mt-7 h-11 rounded-xl text-sm font-semibold",
-                    plan.popular && "glow-red hover:bg-primary",
+                    plan.popular && "glow-accent hover:bg-primary",
                   )}
                 >
                   {plan.cta}

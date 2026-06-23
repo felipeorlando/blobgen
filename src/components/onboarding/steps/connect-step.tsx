@@ -45,7 +45,7 @@ export function ConnectStep() {
       <div className="space-y-4">
         <Reveal>
           <div className="overflow-hidden rounded-2xl border border-border bg-card card-surface">
-            <div className="flex items-center gap-3 border-b border-border bg-[oklch(0.06_0.01_25)] px-5 py-4 dark:bg-black/30">
+            <div className="flex items-center gap-3 border-b border-border bg-[oklch(0.06_0.01_265)] px-5 py-4 dark:bg-black/30">
               <span className="flex size-10 items-center justify-center rounded-xl bg-white">
                 <YouTubeIcon className="size-6 text-[#FF0000]" />
               </span>
@@ -65,7 +65,7 @@ export function ConnectStep() {
                 type="button"
                 onClick={connect}
                 disabled={status === "connecting"}
-                className="glow-red mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary text-[0.88rem] font-semibold text-primary-foreground transition-[transform,background-color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-primary/90 active:scale-[0.99] disabled:opacity-80 motion-reduce:transition-none motion-reduce:active:scale-100"
+                className="glow-accent mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary text-[0.88rem] font-semibold text-primary-foreground transition-[transform,background-color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-primary/90 active:scale-[0.99] disabled:opacity-80 motion-reduce:transition-none motion-reduce:active:scale-100"
               >
                 {status === "connecting" ? (
                   <>

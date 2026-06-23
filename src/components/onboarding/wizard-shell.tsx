@@ -121,7 +121,7 @@ export function WizardShell({
               className={cn(
                 "ml-auto inline-flex h-11 items-center gap-1.5 rounded-xl px-5 text-[0.9rem] font-semibold text-primary-foreground transition-[transform,background-color,opacity] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100",
                 "bg-primary hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40",
-                canContinue && "glow-red",
+                canContinue && "glow-accent",
               )}
             >
               {isFinal ? (
@@ -141,7 +141,7 @@ export function WizardShell({
       </section>
 
       {/* ----- Preview (lg+), always a cinematic dark stage ----- */}
-      <aside className="hidden border-l border-border bg-[oklch(0.06_0.01_25)] lg:block lg:overflow-hidden">
+      <aside className="hidden border-l border-border bg-[oklch(0.06_0.01_265)] lg:block lg:overflow-hidden">
         <PreviewPanel step={step.id} />
       </aside>
     </div>

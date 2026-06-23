@@ -110,7 +110,7 @@ function VoiceoverDetail() {
     <DetailFrame caption="Voiceover" badge={<ReadyTag>Voice Ready</ReadyTag>}>
       <div className="flex flex-1 flex-col justify-center gap-5">
         <div className="flex items-center gap-3">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-[oklch(0.5_0.243_28)] text-white">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <Mic className="size-5" />
           </span>
           <div>

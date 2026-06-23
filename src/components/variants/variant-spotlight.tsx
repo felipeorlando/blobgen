@@ -145,7 +145,7 @@ function Panel({
           className="pointer-events-none absolute inset-0 rounded-[1.8rem] opacity-0 transition-opacity duration-300 group-hover/panel:opacity-100"
           style={{
             background:
-              "radial-gradient(260px circle at var(--mx,50%) var(--my,50%), oklch(0.62 0.24 26 / 0.16), transparent 70%)",
+              "radial-gradient(260px circle at var(--mx,50%) var(--my,50%), oklch(0.78 0.01 265 / 0.14), transparent 70%)",
           }}
         />
       ) : null}

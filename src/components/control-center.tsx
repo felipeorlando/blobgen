@@ -33,7 +33,7 @@ export function ControlCenter() {
           title={
             <>
               <span className="text-grad-light">Scale your Shorts with a </span>
-              <span className="text-grad-red">content control center.</span>
+              <span className="text-grad-accent">content control center.</span>
             </>
           }
           subtitle="Schedule, queue, and publish on autopilot. Everything in one place to keep your channel consistent and growing."
@@ -513,7 +513,7 @@ function CtaBar() {
             href="/onboarding"
             className={cn(
               buttonVariants({ variant: "default" }),
-              "h-11 rounded-xl px-6 text-sm font-semibold glow-red hover:bg-primary",
+              "h-11 rounded-xl px-6 text-sm font-semibold glow-accent hover:bg-primary",
             )}
           >
             Start automating

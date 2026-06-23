@@ -47,7 +47,7 @@ export function Pipeline() {
           <Eyebrow icon={Sparkles}>AI Video Autopilot</Eyebrow>
           <h2 className="mt-6 text-balance text-4xl font-extrabold leading-[1.04] tracking-tight sm:text-5xl lg:text-6xl">
             <span className="text-grad-light">Turn any topic into a </span>
-            <span className="text-grad-red">YouTube Short</span>
+            <span className="text-grad-accent">YouTube Short</span>
             <span className="text-grad-light"> on autopilot</span>
           </h2>
           <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -59,7 +59,7 @@ export function Pipeline() {
               href="#pricing"
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "h-12 w-full rounded-xl px-7 text-base font-semibold glow-red hover:bg-primary sm:w-auto",
+                "h-12 w-full rounded-xl px-7 text-base font-semibold glow-accent hover:bg-primary sm:w-auto",
               )}
             >
               <Zap className="size-4" />
@@ -200,7 +200,7 @@ function MockButton({
       aria-hidden="true"
       className={cn(
         buttonVariants({ variant: "default" }),
-        "h-10 rounded-xl px-4 text-sm font-semibold glow-red",
+        "h-10 rounded-xl px-4 text-sm font-semibold glow-accent",
         className,
       )}
     >
@@ -291,7 +291,7 @@ function VoiceoverCard() {
     <Card className="flex flex-col p-4">
       <CardHead n={3} title="Voiceover" badge={<ReadyBadge>Voice Ready</ReadyBadge>} />
       <div className="mt-3 flex items-center gap-3">
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-[oklch(0.5_0.243_28)] text-white">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
           <Mic className="size-4" />
         </span>
         <div className="min-w-0">
@@ -400,7 +400,7 @@ function PhonePreview() {
           <span className="-rotate-1 rounded bg-white px-2 py-1 text-[0.95rem] font-extrabold tracking-tight text-black shadow-md">
             Best AI tools
           </span>
-          <span className="rotate-1 rounded bg-primary px-2 py-1 text-[0.95rem] font-extrabold tracking-tight text-white shadow-md">
+          <span className="rotate-1 rounded bg-primary px-2 py-1 text-[0.95rem] font-extrabold tracking-tight text-primary-foreground shadow-md">
             for creators
           </span>
         </div>
