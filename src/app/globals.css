@@ -51,7 +51,7 @@
 }
 
 /* blobgen.ai — sober monochrome theme. Light is the default palette
-   (white + silver); `.dark` overrides it with the black + gray theme.
+   (white + silver); `.dark` overrides it with a dark-gray + gray theme.
    The accent is neutral: a near-black primary on light, a bright
    silver-gray primary on dark. `--destructive` keeps a standalone red so
    error states still read. Theme is chosen at runtime (light / system /
@@ -109,30 +109,30 @@
 .dark {
   color-scheme: dark;
 
-  --background: oklch(0.045 0.001 265);
+  --background: oklch(0.215 0.004 265);
   --foreground: oklch(0.985 0 0);
 
-  --card: oklch(0.115 0.002 265);
+  --card: oklch(0.245 0.005 265);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.13 0.003 265);
+  --popover: oklch(0.265 0.005 265);
   --popover-foreground: oklch(0.985 0 0);
 
   --primary: oklch(0.92 0.003 265);
   --primary-foreground: oklch(0.18 0.004 265);
 
-  --secondary: oklch(0.165 0.003 265);
+  --secondary: oklch(0.275 0.005 265);
   --secondary-foreground: oklch(0.985 0 0);
 
-  --muted: oklch(0.165 0.003 265);
-  --muted-foreground: oklch(0.66 0.005 265);
+  --muted: oklch(0.275 0.005 265);
+  --muted-foreground: oklch(0.7 0.005 265);
 
-  --accent: oklch(0.205 0.004 265);
+  --accent: oklch(0.3 0.006 265);
   --accent-foreground: oklch(0.985 0 0);
 
   --destructive: oklch(0.62 0.21 27);
 
-  --border: oklch(1 0 0 / 9%);
-  --input: oklch(1 0 0 / 12%);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 13%);
   --ring: oklch(0.72 0.008 265 / 45%);
 
   --brand: oklch(0.92 0.003 265);
@@ -141,16 +141,16 @@
   --chart-1: oklch(0.92 0.003 265);
   --chart-2: oklch(0.78 0.004 265);
   --chart-3: oklch(0.64 0.005 265);
-  --chart-4: oklch(0.5 0.005 265);
-  --chart-5: oklch(0.38 0.005 265);
+  --chart-4: oklch(0.52 0.005 265);
+  --chart-5: oklch(0.42 0.005 265);
 
-  --sidebar: oklch(0.045 0.001 265);
+  --sidebar: oklch(0.215 0.004 265);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.92 0.003 265);
   --sidebar-primary-foreground: oklch(0.18 0.004 265);
-  --sidebar-accent: oklch(0.205 0.004 265);
+  --sidebar-accent: oklch(0.3 0.006 265);
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 9%);
+  --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.72 0.008 265 / 45%);
 }
 
