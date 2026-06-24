@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { approveStageAction, rejectStageAction } from "@/server/actions/pipeline";
 import type { AssetView, StageRunView } from "@/hooks/use-project-poll";
+import { CutsOutput } from "./cuts-output";
 import { ProductionOutput } from "./production-output";
 import { ResearchOutput } from "./research-output";
 import { ScriptOutput } from "./script-output";
@@ -93,6 +94,8 @@ function StageOutput({
       return <ResearchOutput data={asset.data} />;
     case "script":
       return <ScriptOutput data={asset.data} />;
+    case "cuts":
+      return <CutsOutput data={asset.data} />;
     case "materials": {
       const items = (asset.data as MaterialsData)?.materials ?? [];
       return (

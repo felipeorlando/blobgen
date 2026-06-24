@@ -4,6 +4,7 @@ import { researchStage } from "./stages/research";
 import { scriptStage } from "./stages/script";
 import { storyboardStage } from "./stages/storyboard";
 import { productionStage } from "./stages/production";
+import { cutsStage } from "./stages/cuts";
 import { distributionStage } from "./stages/stubs";
 import type { Stage } from "./types";
 
@@ -14,6 +15,7 @@ export const STAGES: Stage[] = [
   materialsStage,
   storyboardStage,
   productionStage,
+  cutsStage,
   distributionStage,
 ];
 

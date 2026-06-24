@@ -18,6 +18,7 @@ const STAGE_LABELS: Record<string, string> = {
   materials: "Materials",
   storyboard: "Storyboard",
   production: "Production · sound + video",
+  cuts: "Cuts · final video",
   distribution: "Distribution · thumbnail + publish",
 };
 

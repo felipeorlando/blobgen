@@ -34,6 +34,7 @@ export type StageKey =
   | "materials"
   | "storyboard"
   | "production"
+  | "cuts"
   | "distribution";
 
 /** stage_run status machine. */

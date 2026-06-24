@@ -11,6 +11,8 @@ export const CREDIT_RATES = {
   perVoiceover: 10,
   perImageGen: 8,
   perReplicateSecond: 1,
+  // Local ffmpeg video assembly (Cuts).
+  perVideoRender: 5,
 } as const;
 
 /** Credits for an LLM call given token counts. */
@@ -48,4 +50,9 @@ export function creditsForMedia(opts: {
     (opts.voiceovers ?? 0) * CREDIT_RATES.perVoiceover +
     (opts.images ?? 0) * CREDIT_RATES.perImageGen
   );
+}
+
+/** Flat credits for a local ffmpeg video render (Cuts). */
+export function creditsForRender(): number {
+  return CREDIT_RATES.perVideoRender;
 }

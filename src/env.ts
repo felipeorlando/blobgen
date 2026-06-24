@@ -50,6 +50,9 @@ const EnvSchema = z.object({
   STORAGE_DRIVER: z.enum(["fs", "s3"]).default("fs"),
   STORAGE_DIR: z.string().default("./.storage"),
 
+  // Override the ffmpeg binary (defaults to the bundled ffmpeg-static).
+  FFMPEG_PATH: z.string().optional(),
+
   STARTING_CREDITS: z.coerce.number().int().positive().default(500),
 });
 

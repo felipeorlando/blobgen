@@ -28,6 +28,7 @@ const DEFAULT_GATES: Record<StageKey, GateMode> = {
   materials: "manual",
   storyboard: "manual",
   production: "manual",
+  cuts: "manual",
   distribution: "manual",
 };
 
