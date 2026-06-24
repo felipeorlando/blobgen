@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ArrowUp,
   Check,
@@ -20,6 +21,7 @@ import {
 } from "@/lib/studio";
 import { useStudio } from "./studio-context";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { createProjectAction } from "@/server/actions/projects";
 
 type Status = "idle" | "generating" | "done";
 
@@ -90,12 +92,7 @@ export function PromptComposer() {
   const [error, setError] = useState<string | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
-
-  useEffect(() => {
-    const t = timers.current;
-    return () => t.forEach(clearTimeout);
-  }, []);
+  const router = useRouter();
 
   function toggleFormat(id: string) {
     setError(null);
@@ -104,7 +101,7 @@ export function PromptComposer() {
     );
   }
 
-  function generate() {
+  async function generate() {
     if (!prompt.trim()) {
       setError("Describe your idea first.");
       textareaRef.current?.focus();
@@ -116,8 +113,22 @@ export function PromptComposer() {
     }
     setError(null);
     setStatus("generating");
-    timers.current.push(setTimeout(() => setStatus("done"), 1700));
-    timers.current.push(setTimeout(() => setStatus("idle"), 4200));
+    const res = await createProjectAction({
+      channelId,
+      prompt,
+      mode: mode === "Series" ? "series" : "single",
+      formats,
+      aspectRatio: ratio,
+      duration,
+      voice,
+    });
+    if (res.ok) {
+      setStatus("done");
+      router.push(`/studio/project/${res.projectId}`);
+    } else {
+      setStatus("idle");
+      setError(res.error);
+    }
   }
 
   const statusText = error

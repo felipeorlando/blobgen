@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
@@ -29,6 +29,7 @@ import {
 } from "@/lib/studio";
 import { useStudio } from "./studio-context";
 import { StudioTopbar } from "./studio-topbar";
+import { listLibraryAction } from "@/server/actions/data";
 
 const KIND_ICON: Record<AssetKind, LucideIcon> = {
   "Long-form": Clapperboard,
@@ -37,6 +38,9 @@ const KIND_ICON: Record<AssetKind, LucideIcon> = {
   Thumbnail: ImageIcon,
   Script: FileText,
   Voiceover: AudioLines,
+  ResearchBrief: Sparkles,
+  Materials: ImageIcon,
+  Storyboard: LayoutGrid,
 };
 
 const STATUS: Record<
@@ -213,10 +217,22 @@ function LibraryRow({ item }: { item: LibraryItem }) {
 
 export function LibraryView() {
   const { channel, channelId } = useStudio();
-  const items = getLibrary(channelId);
+  const [real, setReal] = useState<LibraryItem[] | null>(null);
+  // Show real generated assets when present; otherwise the demo library.
+  const items = real && real.length > 0 ? real : getLibrary(channelId);
   const [kind, setKind] = useState("all");
   const [query, setQuery] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
+
+  useEffect(() => {
+    let active = true;
+    listLibraryAction(channelId).then((r) => {
+      if (active) setReal(r);
+    });
+    return () => {
+      active = false;
+    };
+  }, [channelId]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();

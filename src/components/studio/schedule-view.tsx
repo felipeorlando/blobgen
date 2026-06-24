@@ -43,6 +43,9 @@ const KIND_ICON: Record<AssetKind, LucideIcon> = {
   Thumbnail: ImageIcon,
   Script: FileText,
   Voiceover: FileText,
+  ResearchBrief: Sparkles,
+  Materials: ImageIcon,
+  Storyboard: Sparkles,
 };
 
 const STATUS: Record<

@@ -582,7 +582,10 @@ export type AssetKind =
   | "Cuts"
   | "Thumbnail"
   | "Script"
-  | "Voiceover";
+  | "Voiceover"
+  | "ResearchBrief"
+  | "Materials"
+  | "Storyboard";
 
 export type LibraryItem = {
   id: string;
@@ -671,6 +674,12 @@ function kindMeta(
       return { meta: `${round(0.6 + rnd() * 2.4, 1)}k words`, visual: false };
     case "Voiceover":
       return { meta: `${1 + Math.floor(rnd() * 9)}:${ss()} min`, visual: false };
+    case "ResearchBrief":
+      return { meta: `${3 + Math.floor(rnd() * 6)} sources`, visual: false };
+    case "Materials":
+      return { meta: `${4 + Math.floor(rnd() * 8)} clips`, visual: true };
+    case "Storyboard":
+      return { meta: `${4 + Math.floor(rnd() * 8)} shots`, visual: true };
   }
 }
 
