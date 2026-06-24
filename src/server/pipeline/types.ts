@@ -7,6 +7,7 @@ import type {
 } from "@/db/schema";
 import type {
   LLMProvider,
+  MediaProvider,
   SearchProvider,
   StockProvider,
   YouTubeProvider,
@@ -18,6 +19,7 @@ export type StageProviders = {
   search: SearchProvider;
   youtube: YouTubeProvider;
   stock: StockProvider;
+  media: MediaProvider;
 };
 
 export interface ApiUsageInput {

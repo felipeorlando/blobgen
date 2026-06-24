@@ -7,7 +7,10 @@ export const CREDIT_RATES = {
   perKOutputTokens: 3,
   perSearchCall: 2,
   perYouTubeCall: 1,
-  // Wave 2: perReplicateSecond, perImageGen, etc.
+  // Media generation (Replicate).
+  perVoiceover: 10,
+  perImageGen: 8,
+  perReplicateSecond: 1,
 } as const;
 
 /** Credits for an LLM call given token counts. */
@@ -26,5 +29,23 @@ export function creditsForCalls(opts: {
   return (
     (opts.search ?? 0) * CREDIT_RATES.perSearchCall +
     (opts.youtube ?? 0) * CREDIT_RATES.perYouTubeCall
+  );
+}
+
+/**
+ * Credits for media generation. Prefer measured Replicate seconds when known;
+ * otherwise fall back to flat per-asset rates (used for estimates).
+ */
+export function creditsForMedia(opts: {
+  voiceovers?: number;
+  images?: number;
+  seconds?: number;
+}): number {
+  if (opts.seconds && opts.seconds > 0) {
+    return Math.ceil(opts.seconds * CREDIT_RATES.perReplicateSecond);
+  }
+  return (
+    (opts.voiceovers ?? 0) * CREDIT_RATES.perVoiceover +
+    (opts.images ?? 0) * CREDIT_RATES.perImageGen
   );
 }

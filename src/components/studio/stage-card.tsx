@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { approveStageAction, rejectStageAction } from "@/server/actions/pipeline";
 import type { AssetView, StageRunView } from "@/hooks/use-project-poll";
+import { ProductionOutput } from "./production-output";
 import { ResearchOutput } from "./research-output";
 import { ScriptOutput } from "./script-output";
 
@@ -80,6 +81,10 @@ function StageOutput({
         {stage.status === "pending" ? "Waiting for earlier stages…" : "Working…"}
       </p>
     );
+  }
+  // Production emits multiple assets (voiceover + images) — render its aggregate output.
+  if (stage.stageKey === "production") {
+    return <ProductionOutput output={stage.output} />;
   }
   if (!asset) return null;
 

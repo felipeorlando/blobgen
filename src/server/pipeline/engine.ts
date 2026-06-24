@@ -16,7 +16,7 @@ import { creditsForTokens } from "@/server/credits/costs";
 import * as credits from "@/server/credits/service";
 import { InsufficientCredits } from "@/server/credits/service";
 import { getOrchestrator } from "@/server/jobs";
-import { llm, search, stock, youtube } from "@/server/providers";
+import { llm, media, search, stock, youtube } from "@/server/providers";
 import { storage } from "@/server/storage";
 import { evaluateOutput } from "./evaluator";
 import { getStage, orderedStages } from "./registry";
@@ -25,7 +25,13 @@ import type { ApiUsageInput, StageContext, StageProviders } from "./types";
 const MAX_AI_REVISIONS = 2;
 
 function buildProviders(): StageProviders {
-  return { llm: llm(), search: search(), youtube: youtube(), stock: stock() };
+  return {
+    llm: llm(),
+    search: search(),
+    youtube: youtube(),
+    stock: stock(),
+    media: media(),
+  };
 }
 
 async function buildContext(

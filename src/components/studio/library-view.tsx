@@ -41,6 +41,8 @@ const KIND_ICON: Record<AssetKind, LucideIcon> = {
   ResearchBrief: Sparkles,
   Materials: ImageIcon,
   Storyboard: LayoutGrid,
+  Image: ImageIcon,
+  Video: Clapperboard,
 };
 
 const STATUS: Record<

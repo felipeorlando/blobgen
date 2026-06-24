@@ -132,6 +132,8 @@ const UI_KINDS = new Set<UiAssetKind>([
   "ResearchBrief",
   "Materials",
   "Storyboard",
+  "Image",
+  "Video",
 ]);
 
 function uiKind(kind: string): UiAssetKind {

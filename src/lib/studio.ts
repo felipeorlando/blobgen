@@ -585,7 +585,9 @@ export type AssetKind =
   | "Voiceover"
   | "ResearchBrief"
   | "Materials"
-  | "Storyboard";
+  | "Storyboard"
+  | "Image"
+  | "Video";
 
 export type LibraryItem = {
   id: string;
@@ -680,6 +682,10 @@ function kindMeta(
       return { meta: `${4 + Math.floor(rnd() * 8)} clips`, visual: true };
     case "Storyboard":
       return { meta: `${4 + Math.floor(rnd() * 8)} shots`, visual: true };
+    case "Image":
+      return { meta: "1024 x 1024", visual: true };
+    case "Video":
+      return { meta: `0:${String(20 + Math.floor(rnd() * 39)).padStart(2, "0")}`, visual: true };
   }
 }
 

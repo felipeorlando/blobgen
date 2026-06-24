@@ -40,6 +40,8 @@ const EnvSchema = z.object({
 
   YOUTUBE_API_KEY: z.string().optional(),
   REPLICATE_API_TOKEN: z.string().optional(),
+  REPLICATE_TTS_MODEL: z.string().optional(),
+  REPLICATE_IMAGE_MODEL: z.string().optional(),
   PEXELS_API_KEY: z.string().optional(),
 
   JOB_DRIVER: z.enum(["inprocess", "bullmq"]).default("inprocess"),

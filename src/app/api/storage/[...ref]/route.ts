@@ -5,6 +5,13 @@ const TYPES: Record<string, string> = {
   md: "text/markdown; charset=utf-8",
   json: "application/json; charset=utf-8",
   txt: "text/plain; charset=utf-8",
+  mp3: "audio/mpeg",
+  wav: "audio/wav",
+  png: "image/png",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  webp: "image/webp",
+  mp4: "video/mp4",
 };
 
 export async function GET(

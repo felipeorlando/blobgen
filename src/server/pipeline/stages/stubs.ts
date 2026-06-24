@@ -24,7 +24,6 @@ function stub(key: Stage["key"], label: string): Stage {
   };
 }
 
-export const productionStage = stub("production", "Production (sound + video)");
 export const distributionStage = stub(
   "distribution",
   "Distribution (thumbnail + publish)",

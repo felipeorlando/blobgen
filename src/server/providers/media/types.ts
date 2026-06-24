@@ -14,6 +14,10 @@ export interface MediaGenResult {
   url: string;
   model: string;
   raw: unknown;
+  /** Replicate predict_time in seconds, when reported. */
+  predictSeconds?: number;
+  /** True when produced by the keyless mock provider (no real binary). */
+  mock?: boolean;
 }
 
 export interface MediaProvider {
