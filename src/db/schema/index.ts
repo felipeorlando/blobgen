@@ -6,3 +6,4 @@ export * from "./pipeline";
 export * from "./assets";
 export * from "./credits";
 export * from "./usage";
+export * from "./uploads";

@@ -1,11 +1,16 @@
 "use server";
 
-import type { LibraryItem, Project as UiProject } from "@/lib/studio";
+import type {
+  LibraryItem,
+  Project as UiProject,
+  ScheduledUpload,
+} from "@/lib/studio";
 import { auth } from "@/server/auth";
 import {
   getCreditBalance,
   listLibraryForChannel,
   listProjectsForChannel,
+  listScheduleForChannel,
 } from "@/server/projects/service";
 
 export async function getCreditBalanceAction(): Promise<number> {
@@ -28,4 +33,12 @@ export async function listLibraryAction(
   const session = await auth();
   if (!session?.user?.id) return [];
   return listLibraryForChannel(channelId, session.user.id);
+}
+
+export async function listScheduleAction(
+  channelId: string,
+): Promise<ScheduledUpload[]> {
+  const session = await auth();
+  if (!session?.user?.id) return [];
+  return listScheduleForChannel(channelId, session.user.id);
 }

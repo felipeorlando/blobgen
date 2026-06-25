@@ -29,7 +29,8 @@ const DEFAULT_GATES: Record<StageKey, GateMode> = {
   storyboard: "manual",
   production: "manual",
   cuts: "manual",
-  distribution: "manual",
+  // Ship automatically once the finished video (Cuts) is approved.
+  distribution: "auto",
 };
 
 async function seed() {
@@ -83,7 +84,10 @@ async function seed() {
         defaultFormats: ["long", "short"],
         gates: DEFAULT_GATES,
       })
-      .onConflictDoNothing();
+      .onConflictDoUpdate({
+        target: channelConfigs.channelId,
+        set: { gates: DEFAULT_GATES },
+      });
   }
 
   console.log(`→ seeding ${COMPETITORS.length} competitors`);

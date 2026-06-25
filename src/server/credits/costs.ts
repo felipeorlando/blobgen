@@ -13,6 +13,8 @@ export const CREDIT_RATES = {
   perReplicateSecond: 1,
   // Local ffmpeg video assembly (Cuts).
   perVideoRender: 5,
+  // Publish/schedule to a platform (Distribution).
+  perPublish: 5,
 } as const;
 
 /** Credits for an LLM call given token counts. */
@@ -55,4 +57,9 @@ export function creditsForMedia(opts: {
 /** Flat credits for a local ffmpeg video render (Cuts). */
 export function creditsForRender(): number {
   return CREDIT_RATES.perVideoRender;
+}
+
+/** Flat credits for publishing/scheduling to a platform (Distribution). */
+export function creditsForPublish(): number {
+  return CREDIT_RATES.perPublish;
 }

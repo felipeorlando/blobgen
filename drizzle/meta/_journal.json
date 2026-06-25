@@ -8,6 +8,13 @@
       "when": 1782285171070,
       "tag": "0000_wealthy_lady_mastermind",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1782349511813,
+      "tag": "0001_glamorous_bucky",
+      "breakpoints": true
     }
   ]
 }

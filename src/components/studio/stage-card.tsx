@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { approveStageAction, rejectStageAction } from "@/server/actions/pipeline";
 import type { AssetView, StageRunView } from "@/hooks/use-project-poll";
 import { CutsOutput } from "./cuts-output";
+import { DistributionOutput } from "./distribution-output";
 import { ProductionOutput } from "./production-output";
 import { ResearchOutput } from "./research-output";
 import { ScriptOutput } from "./script-output";
@@ -83,9 +84,12 @@ function StageOutput({
       </p>
     );
   }
-  // Production emits multiple assets (voiceover + images) — render its aggregate output.
+  // Production and Distribution render from their aggregate stage.output (not a single asset).
   if (stage.stageKey === "production") {
     return <ProductionOutput output={stage.output} />;
+  }
+  if (stage.stageKey === "distribution") {
+    return <DistributionOutput output={stage.output} />;
   }
   if (!asset) return null;
 

@@ -5,18 +5,23 @@ import {
   channels,
   projects,
   stageRuns,
+  uploads,
   type Asset,
   type Project,
   type ProjectStatus,
   type StageRun,
+  type Upload,
 } from "@/db/schema";
 import { getBalance } from "@/server/credits/service";
 import { initProject } from "@/server/pipeline/engine";
+import { SCHEDULE_TODAY_INDEX } from "@/lib/studio";
 import type {
   AssetKind as UiAssetKind,
   LibraryItem,
   Project as UiProject,
   ProjectStatus as UiProjectStatus,
+  ScheduledUpload,
+  UploadStatus as UiUploadStatus,
   VideoFormat,
 } from "@/lib/studio";
 
@@ -182,6 +187,52 @@ export async function listLibraryForChannel(
     editedLabel: `Edited ${relativeTime(asset.createdAt)}`,
     meta: metaString(asset),
   }));
+}
+
+const UPLOAD_STATUS_MAP: Record<Upload["status"], UiUploadStatus> = {
+  scheduled: "Scheduled",
+  processing: "Rendering",
+  published: "Published",
+  failed: "Draft",
+};
+
+/** Map a stored upload onto the calendar's relative-day model (anchored at real today). */
+function toScheduledUpload(u: Upload): ScheduledUpload | null {
+  const when = u.publishAt ?? u.createdAt;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const day = new Date(when);
+  day.setHours(0, 0, 0, 0);
+  const daysFromNow = Math.round((day.getTime() - today.getTime()) / 86_400_000);
+  const dayIndex = SCHEDULE_TODAY_INDEX + daysFromNow;
+  if (dayIndex < 0 || dayIndex > 13) return null; // outside the 14-day window
+  const t = new Date(when);
+  return {
+    id: u.id,
+    channelId: u.channelId,
+    title: u.title || "Untitled",
+    thumb: u.thumb || "/images/tech.jpg",
+    visual: true,
+    kind: u.kind as UiAssetKind,
+    status: UPLOAD_STATUS_MAP[u.status],
+    dayIndex,
+    minutes: t.getHours() * 60 + t.getMinutes(),
+    timeLabel: t.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+    autopilot: true,
+  };
+}
+
+export async function listScheduleForChannel(
+  channelId: string,
+  userId: string,
+): Promise<ScheduledUpload[]> {
+  const rows = await db.query.uploads.findMany({
+    where: and(eq(uploads.channelId, channelId), eq(uploads.userId, userId)),
+    orderBy: [asc(uploads.publishAt)],
+  });
+  return rows
+    .map(toScheduledUpload)
+    .filter((x): x is ScheduledUpload => x !== null);
 }
 
 export async function getCreditBalance(userId: string): Promise<number> {

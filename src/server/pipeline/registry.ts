@@ -5,7 +5,7 @@ import { scriptStage } from "./stages/script";
 import { storyboardStage } from "./stages/storyboard";
 import { productionStage } from "./stages/production";
 import { cutsStage } from "./stages/cuts";
-import { distributionStage } from "./stages/stubs";
+import { distributionStage } from "./stages/distribution";
 import type { Stage } from "./types";
 
 /** The ordered pipeline. Add a future real stage = implement Stage + list it here. */

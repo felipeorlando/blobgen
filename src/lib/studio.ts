@@ -895,7 +895,7 @@ const SCHEDULE_SLOTS = [
   { minutes: 1200, label: "8:00 PM", short: "8p" },
 ];
 
-export type UploadStatus = "Scheduled" | "Rendering" | "Draft";
+export type UploadStatus = "Scheduled" | "Rendering" | "Draft" | "Published";
 
 export type ScheduledUpload = {
   id: string;

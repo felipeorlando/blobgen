@@ -63,7 +63,7 @@ export interface StageResult {
   assets: NewStageAsset[];
   /** Actual credits consumed (from token/call usage). */
   actualCredits: number;
-  projectPatch?: Partial<Pick<Project, "title" | "thumb">>;
+  projectPatch?: Partial<Pick<Project, "title" | "thumb" | "status">>;
 }
 
 /** A pipeline stage. Business logic only — never writes status or touches credits. */
