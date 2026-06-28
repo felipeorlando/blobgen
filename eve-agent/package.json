@@ -1,0 +1,24 @@
+{
+  "name": "blobgen-eve-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Durable eve agent that drives OpenMontage to produce videos for blobgen.",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "eve dev",
+    "build": "eve build",
+    "start": "eve start",
+    "info": "eve info"
+  },
+  "dependencies": {
+    "eve": "latest",
+    "ai": "latest",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24"
+  }
+}
