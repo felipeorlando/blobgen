@@ -34,6 +34,7 @@ export interface CreateProjectInput {
   aspectRatio: string;
   duration: string;
   voice: string;
+  pipeline: string;
 }
 
 export async function createProject(
@@ -59,6 +60,7 @@ export async function createProject(
       aspectRatio: input.aspectRatio,
       duration: input.duration,
       voice: input.voice,
+      pipeline: input.pipeline,
       thumb: channel.image,
       status: "Rendering",
     })

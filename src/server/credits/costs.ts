@@ -15,6 +15,8 @@ export const CREDIT_RATES = {
   perVideoRender: 5,
   // Publish/schedule to a platform (Distribution).
   perPublish: 5,
+  // USD→credits conversion for metered provider spend (OpenMontage ToolResult costs).
+  perUsd: 100,
 } as const;
 
 /** Credits for an LLM call given token counts. */

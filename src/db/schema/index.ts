@@ -7,3 +7,4 @@ export * from "./assets";
 export * from "./credits";
 export * from "./usage";
 export * from "./uploads";
+export * from "./media-bank";

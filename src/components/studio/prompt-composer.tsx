@@ -6,6 +6,7 @@ import {
   ArrowUp,
   Check,
   ChevronDown,
+  Clapperboard,
   LayoutGrid,
   Loader2,
   Paperclip,
@@ -19,6 +20,7 @@ import {
   SUGGESTIONS,
   VOICE_STYLES,
 } from "@/lib/studio";
+import { PIPELINES, DEFAULT_PIPELINE, getPipeline } from "@/lib/pipelines";
 import { useStudio } from "./studio-context";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { createProjectAction } from "@/server/actions/projects";
@@ -85,6 +87,7 @@ export function PromptComposer() {
   const [mode, setMode] = useState<"Single idea" | "Series">("Single idea");
   const [prompt, setPrompt] = useState("");
   const [formats, setFormats] = useState<string[]>(["long", "short"]);
+  const [pipeline, setPipeline] = useState<string>(DEFAULT_PIPELINE);
   const [ratio, setRatio] = useState<(typeof ASPECT_RATIOS)[number]>("9:16");
   const [duration, setDuration] = useState<(typeof DURATIONS)[number]>("30s");
   const [voice, setVoice] = useState(VOICE_STYLES[0].id);
@@ -118,6 +121,7 @@ export function PromptComposer() {
       prompt,
       mode: mode === "Series" ? "series" : "single",
       formats,
+      pipeline,
       aspectRatio: ratio,
       duration,
       voice,
@@ -166,6 +170,56 @@ export function PromptComposer() {
         >
           <Paperclip className="size-4" />
         </button>
+
+        {/* Pipeline menu (single-select creative format) */}
+        <Popover>
+          <PopoverTrigger className={triggerCls}>
+            <Clapperboard className="size-3.5 text-muted-foreground" />
+            {getPipeline(pipeline)?.label ?? "Pipeline"}
+            <ChevronDown className="size-3.5 text-muted-foreground" />
+          </PopoverTrigger>
+          <PopoverContent className="max-h-80 w-72 overflow-y-auto">
+            <p className="px-2 pb-1 pt-1 text-[0.66rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/70">
+              Pipeline
+            </p>
+            {PIPELINES.map((p) => {
+              const active = p.id === pipeline;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setPipeline(p.id)}
+                  aria-pressed={active}
+                  className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-muted"
+                >
+                  <span className="flex-1">
+                    <span className="flex items-center gap-1.5 text-[0.82rem] font-medium text-foreground">
+                      {p.label}
+                      {p.zeroKey ? (
+                        <span className="rounded bg-emerald-500/12 px-1 text-[0.6rem] font-semibold uppercase tracking-wide text-emerald-600">
+                          free
+                        </span>
+                      ) : null}
+                    </span>
+                    <span className="block text-[0.68rem] text-muted-foreground">
+                      {p.hint}
+                    </span>
+                  </span>
+                  <span
+                    className={cn(
+                      "flex size-4 shrink-0 items-center justify-center rounded-full border transition-colors",
+                      active
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border",
+                    )}
+                  >
+                    {active ? <Check className="size-3" strokeWidth={3} /> : null}
+                  </span>
+                </button>
+              );
+            })}
+          </PopoverContent>
+        </Popover>
 
         {/* Formats menu (multi-select) */}
         <Popover>

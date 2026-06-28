@@ -2,6 +2,7 @@
 
 import { auth } from "@/server/auth";
 import { createProject } from "@/server/projects/service";
+import { coercePipeline } from "@/lib/pipelines";
 
 export interface CreateProjectActionInput {
   channelId: string;
@@ -11,6 +12,7 @@ export interface CreateProjectActionInput {
   aspectRatio: string;
   duration: string;
   voice: string;
+  pipeline?: string;
 }
 
 export type ActionResult<T = unknown> =
@@ -37,6 +39,7 @@ export async function createProjectAction(
       aspectRatio: input.aspectRatio,
       duration: input.duration,
       voice: input.voice,
+      pipeline: coercePipeline(input.pipeline),
     });
     return { ok: true, projectId };
   } catch (e) {

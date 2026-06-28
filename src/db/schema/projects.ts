@@ -29,8 +29,12 @@ export const projects = pgTable("projects", {
   aspectRatio: text("aspect_ratio").notNull().default("9:16"),
   duration: text("duration").notNull().default("30s"),
   voice: text("voice").notNull().default("calm"),
+  // OpenMontage pipeline id (creative format), e.g. "documentary_montage".
+  pipeline: text("pipeline").notNull().default("documentary_montage"),
   status: text("status").$type<ProjectStatus>().notNull().default("Draft"),
   currentStageKey: text("current_stage_key").$type<StageKey>(),
+  // eve session id driving this project's creative run (eve path only).
+  eveSessionId: text("eve_session_id"),
   thumb: text("thumb").notNull().default(""),
   ...timestamps(),
 });
