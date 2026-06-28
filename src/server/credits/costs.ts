@@ -65,3 +65,21 @@ export function creditsForRender(): number {
 export function creditsForPublish(): number {
   return CREDIT_RATES.perPublish;
 }
+
+/** Convert metered USD provider spend (OpenMontage ToolResult costs) to credits. */
+export function usdToCredits(usd: number): number {
+  return Math.ceil(Math.max(0, usd) * CREDIT_RATES.perUsd);
+}
+
+/** Sum reported tool costs (USD) into credits, plus optional render seconds. */
+export function creditsFromToolResults(
+  results: { costUsd?: number }[],
+  extras?: { renderSeconds?: number },
+): number {
+  const usd = results.reduce((sum, r) => sum + (r.costUsd ?? 0), 0);
+  let credits = usdToCredits(usd);
+  if (extras?.renderSeconds && extras.renderSeconds > 0) {
+    credits += Math.ceil(extras.renderSeconds * CREDIT_RATES.perReplicateSecond);
+  }
+  return credits;
+}

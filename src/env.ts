@@ -53,6 +53,13 @@ const EnvSchema = z.object({
   // Override the ffmpeg binary (defaults to the bundled ffmpeg-static).
   FFMPEG_PATH: z.string().optional(),
 
+  // OpenMontage core / eve orchestrator bridge (re-platform). When EVE_ENABLED
+  // is false (default) the existing in-process pipeline runs unchanged.
+  EVE_ENABLED: boolish(false),
+  EVE_URL: z.string().optional(),
+  EVE_CALLBACK_SECRET: z.string().optional(),
+  OPENMONTAGE_DIR: z.string().optional(),
+
   STARTING_CREDITS: z.coerce.number().int().positive().default(500),
 });
 
