@@ -1,0 +1,46 @@
+# Local-first backing services for blobgen.
+# Only Postgres is strictly required; Redis is needed when JOB_DRIVER=bullmq.
+#   docker compose up -d
+services:
+  postgres:
+    image: postgres:16
+    container_name: blobgen-postgres
+    environment:
+      POSTGRES_USER: blobgen
+      POSTGRES_PASSWORD: blobgen
+      POSTGRES_DB: blobgen
+    ports:
+      - "5432:5432"
+    volumes:
+      - blobgen-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blobgen -d blobgen"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    container_name: blobgen-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - blobgen-redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Optional DB inspector at http://localhost:8080 (system: PostgreSQL, server: postgres)
+  adminer:
+    image: adminer:4
+    container_name: blobgen-adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  blobgen-pgdata:
+  blobgen-redisdata:

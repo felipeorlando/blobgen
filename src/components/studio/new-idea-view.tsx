@@ -1,11 +1,11 @@
 "use client";
 
-import { Gem } from "lucide-react";
 import { StudioTopbar } from "./studio-topbar";
 import { PromptComposer } from "./prompt-composer";
 import { ProjectsGrid } from "./projects-grid";
 import { Reveal } from "./reveal";
 import { useStudio } from "./studio-context";
+import { CreditBadge } from "./credit-badge";
 
 export function NewIdeaView() {
   const { channel } = useStudio();
@@ -13,10 +13,7 @@ export function NewIdeaView() {
   return (
     <>
       <StudioTopbar title="New idea" subtitle={channel.name}>
-        <span className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-medium text-foreground">
-          <Gem className="size-3.5 text-primary" />
-          248 credits
-        </span>
+        <CreditBadge />
       </StudioTopbar>
 
       <div className="mx-auto flex min-h-[calc(100dvh-7.5rem)] max-w-[1180px] flex-col px-5 pb-10 pt-10 sm:px-8 sm:pt-14 lg:min-h-[calc(100dvh-4rem)]">

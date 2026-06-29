@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   CheckCircle2,
   ChevronLeft,
@@ -14,7 +15,8 @@ import {
   Smartphone,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getProjects, type Project, type ProjectStatus } from "@/lib/studio";
+import { type Project, type ProjectStatus } from "@/lib/studio";
+import { listProjectsAction } from "@/server/actions/data";
 import { useStudio } from "./studio-context";
 
 const STATUS_STYLE: Record<
@@ -97,8 +99,18 @@ function ProjectCard({ project }: { project: Project }) {
 
 export function ProjectsGrid() {
   const { channelId, channel } = useStudio();
-  const projects = getProjects(channelId);
+  const [projects, setProjects] = useState<Project[]>([]);
   const scroller = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let active = true;
+    listProjectsAction(channelId).then((p) => {
+      if (active) setProjects(p);
+    });
+    return () => {
+      active = false;
+    };
+  }, [channelId]);
 
   function slide(dir: 1 | -1) {
     scroller.current?.scrollBy({ left: dir * 288, behavior: "smooth" });
@@ -143,7 +155,13 @@ export function ProjectsGrid() {
           className="no-scrollbar mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-1 [scroll-padding-left:0px]"
         >
           {projects.map((p) => (
-            <ProjectCard key={p.id} project={p} />
+            <Link
+              key={p.id}
+              href={`/studio/project/${p.id}`}
+              className="shrink-0 snap-start"
+            >
+              <ProjectCard project={p} />
+            </Link>
           ))}
           {/* trailing spacer so the last card isn't flush to the edge */}
           <div className="w-px shrink-0" aria-hidden />

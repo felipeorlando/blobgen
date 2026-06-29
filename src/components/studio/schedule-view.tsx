@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
@@ -31,6 +31,7 @@ import {
 import { useStudio } from "./studio-context";
 import { StudioTopbar } from "./studio-topbar";
 import { Reveal } from "./reveal";
+import { listScheduleAction } from "@/server/actions/data";
 
 /* -------------------------------------------------------------------------- */
 /*  Shared tokens                                                             */
@@ -43,6 +44,11 @@ const KIND_ICON: Record<AssetKind, LucideIcon> = {
   Thumbnail: ImageIcon,
   Script: FileText,
   Voiceover: FileText,
+  ResearchBrief: Sparkles,
+  Materials: ImageIcon,
+  Storyboard: Sparkles,
+  Image: ImageIcon,
+  Video: Clapperboard,
 };
 
 const STATUS: Record<
@@ -63,6 +69,11 @@ const STATUS: Record<
     dot: "bg-muted-foreground/60",
     bar: "bg-border",
     text: "text-muted-foreground",
+  },
+  Published: {
+    dot: "bg-emerald-500",
+    bar: "bg-emerald-500/70",
+    text: "text-emerald-600 dark:text-emerald-400",
   },
 };
 
@@ -397,7 +408,18 @@ function UpcomingQueue({
 
 export function ScheduleView() {
   const { channel, channelId } = useStudio();
-  const schedule = useMemo(() => getSchedule(channelId), [channelId]);
+  const [real, setReal] = useState<ScheduledUpload[] | null>(null);
+  useEffect(() => {
+    let active = true;
+    listScheduleAction(channelId).then((r) => {
+      if (active) setReal(r);
+    });
+    return () => {
+      active = false;
+    };
+  }, [channelId]);
+  // Real scheduled uploads when present; otherwise the demo schedule.
+  const schedule = real && real.length > 0 ? real : getSchedule(channelId);
   const best = useMemo(() => getBestTimes(channelId), [channelId]);
 
   const [week, setWeek] = useState<0 | 1>(0);

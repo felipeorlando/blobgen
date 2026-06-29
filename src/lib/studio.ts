@@ -582,7 +582,12 @@ export type AssetKind =
   | "Cuts"
   | "Thumbnail"
   | "Script"
-  | "Voiceover";
+  | "Voiceover"
+  | "ResearchBrief"
+  | "Materials"
+  | "Storyboard"
+  | "Image"
+  | "Video";
 
 export type LibraryItem = {
   id: string;
@@ -671,6 +676,16 @@ function kindMeta(
       return { meta: `${round(0.6 + rnd() * 2.4, 1)}k words`, visual: false };
     case "Voiceover":
       return { meta: `${1 + Math.floor(rnd() * 9)}:${ss()} min`, visual: false };
+    case "ResearchBrief":
+      return { meta: `${3 + Math.floor(rnd() * 6)} sources`, visual: false };
+    case "Materials":
+      return { meta: `${4 + Math.floor(rnd() * 8)} clips`, visual: true };
+    case "Storyboard":
+      return { meta: `${4 + Math.floor(rnd() * 8)} shots`, visual: true };
+    case "Image":
+      return { meta: "1024 x 1024", visual: true };
+    case "Video":
+      return { meta: `0:${String(20 + Math.floor(rnd() * 39)).padStart(2, "0")}`, visual: true };
   }
 }
 
@@ -880,7 +895,7 @@ const SCHEDULE_SLOTS = [
   { minutes: 1200, label: "8:00 PM", short: "8p" },
 ];
 
-export type UploadStatus = "Scheduled" | "Rendering" | "Draft";
+export type UploadStatus = "Scheduled" | "Rendering" | "Draft" | "Published";
 
 export type ScheduledUpload = {
   id: string;

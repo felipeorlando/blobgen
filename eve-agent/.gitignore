@@ -1,0 +1,9 @@
+node_modules/
+.eve/
+.storage/
+.env
+.env.*
+!.env.example
+sandbox/*
+!sandbox/.gitkeep
+*.log

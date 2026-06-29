@@ -9,6 +9,7 @@ import { Layers } from "@/components/animate-ui/icons/layers";
 import { Clock } from "@/components/animate-ui/icons/clock";
 import { ChartColumn } from "@/components/animate-ui/icons/chart-column";
 import { Users } from "@/components/animate-ui/icons/users";
+import { Images } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ChannelSwitcher } from "./channel-switcher";
 import { UserMenu } from "./user-menu";
@@ -35,6 +36,12 @@ const CREATE: NavItem[] = [
     href: "/studio/library",
     icon: Layers,
     match: (p) => p.startsWith("/studio/library"),
+  },
+  {
+    label: "Image bank",
+    href: "/studio/bank",
+    icon: Images,
+    match: (p) => p.startsWith("/studio/bank"),
   },
   {
     label: "Schedule",
